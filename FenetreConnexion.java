@@ -8,8 +8,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 // Import pour les requête faites à  la base de données et pour la gestion des Exceptions
-import java.sql.Connection;
-import java.sql.DriverManager;
+
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.awt.HeadlessException;
@@ -23,10 +22,6 @@ import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 
-// Import pour le driver jdbc pour la connexion à  la BDD
-import com.mysql.jdbc.Statement;
-
-
 public class FenetreConnexion extends JFrame{
 
 	private static final long serialVersionUID = -8259698762583706502L;
@@ -35,11 +30,7 @@ public class FenetreConnexion extends JFrame{
 	private JTextField login;
 	private JTextField password;
 	
-	// Champs pour la connexion à  la base de données avec le driver jdbc.
-	private static Connection conn;
-    public static String url = "jdbc:mysql://localhost/cave";
-    public static String pwd="";
-    public static String log="root";
+	private InteractionBDD bdd = new InteractionBDD();
 	
     // Constructeur par défaut de la fenêtre de Connexion
 	public FenetreConnexion() {
@@ -84,6 +75,7 @@ public class FenetreConnexion extends JFrame{
 				String [] t = login(login.getText(), ((JPasswordField) password).getPassword());
 				// On instancie l'identifiant de l'utilisateur à  0
 				String idUser = "0";
+				
 				// On crée un ResultSet qui contiendra les résultats de la requête
 				ResultSet resultRequete;
 				
@@ -94,10 +86,11 @@ public class FenetreConnexion extends JFrame{
 				}
 				else
 				// Sinon tous les champs sont non vide.
-				{
-					
+				{	
 					// On récupère les résultats de la requête à  l'aide de la fonction MyConnexion(String nom, String mdp).
-					resultRequete = MyConnexion(t[0], t[1]);
+					String requete = "SELECT * FROM utilisateur WHERE nomUtilisateur='" + t[0] + "' AND motDePasse=MD5('" + t[1] + "')";
+			    	
+					resultRequete = bdd.MyConnexionSelect(requete);
 					// Bloc try catch pour la gestion des excetions dû à  la requête.
 					try {
 						while(resultRequete.next()){
@@ -175,28 +168,4 @@ public class FenetreConnexion extends JFrame{
 		// On renvoie ce tableau
 		return s;
 	}
-     
-    private ResultSet MyConnexion(String name, String mdp) {
-    	
-    	// On initialise le résultat de la requête à  null.
-        ResultSet s = null;
-        
-        // Mise en forme de la requête vue que nous enregistrons les mots de passe en encodant en MD5 
-        String requete = "SELECT * FROM utilisateur WHERE nomUtilisateur='" + name + "' AND motDePasse=MD5('" + mdp + "')";
-    	
-        // Bloc try catch pour la gestion d'Exception par rapport de la connexion à  l'aide du driver ou par rapport à  la requête SQL.
-        try {
-            Class.forName("com.mysql.jdbc.Driver");
-            // Connexion à  la base de données à  l'aide du driver jdbc
-            conn = DriverManager.getConnection(url, log, pwd);
-           
-            // Création et exécution de la requête.
-            Statement statement = (Statement) conn.createStatement();
-            s = statement.executeQuery(requete);
-        } catch (SQLException | ClassNotFoundException ex) {
-            System.out.println(ex.toString());
-        }
-    	// On retourne le résultat de la requête.
-        return s;
-    }
 }

@@ -9,10 +9,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 //Import pour les requête faites à  la base de données et pour la gestion des Exceptions
-import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.ResultSet;
-import java.sql.SQLException;
 
 //Import pour les éléments du JFrame
 import javax.swing.JButton;
@@ -24,9 +21,6 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTable;
 import javax.swing.JTextField;
-
-//Import pour le driver jdbc pour la connexion à  la BDD
-import com.mysql.jdbc.Statement;
 
 
 
@@ -42,16 +36,12 @@ public class FenetreClient extends JFrame{
 	private JCheckBox checknom = new JCheckBox("Nom");
 	private JCheckBox checkcouleur = new JCheckBox("Couleur");
 	
+	
+	private InteractionBDD bdd = new InteractionBDD();
+	
 	// Champ pour le résultat de la recherche
 	JTable tableau;
-	
-	// Champs pour la connexion à  la base de données avec le driver jdbc.
-	private static Connection conn;
-    public static String url = "jdbc:mysql://localhost/cave";
-    public static String pwd="";
-    public static String log="root";
-    
-	
+		
     // Constructeur par défaut de la fenêtre de Client
    	public FenetreClient() {
    		// On appel le constructeur de JFrame avec un paramètre qui est le nom de la fenêtre
@@ -170,7 +160,7 @@ public class FenetreClient extends JFrame{
 				if(checkannee.isSelected()){
 					// S'il l'est on affiche un message d'erreur
 					if(rechercherannee.getText().isEmpty()){
-						JOptionPane.showMessageDialog(null, "Vous avez cocher la recherche par année mais vous n'avez pas renseigner de valeur\nVeuillez en renseigner une", "Erreur", JOptionPane.ERROR_MESSAGE);
+						JOptionPane.showMessageDialog(null, "Vous avez cocher la recherche par année mais vous n'avez pas renseigné de valeur\nVeuillez en renseigner une", "Erreur", JOptionPane.ERROR_MESSAGE);
 					}
 					// Sinon
 					else
@@ -192,7 +182,7 @@ public class FenetreClient extends JFrame{
 					// S'il l'est on affiche un message d'erreur
 					if(recherchernom.getText().isEmpty())
 					{
-						JOptionPane.showMessageDialog(null, "Vous avez cocher la recherche par nom mais vous n'avez pas renseigner de valeur. Veuillez en renseigner une.\n", "Erreur", JOptionPane.ERROR_MESSAGE);
+						JOptionPane.showMessageDialog(null, "Vous avez cocher la recherche par nom mais vous n'avez pas renseigné de valeur. Veuillez en renseigner une.\n", "Erreur", JOptionPane.ERROR_MESSAGE);
 					}
 					// Sinon on récupère le contenu du champs recherchernom
 					else
@@ -206,7 +196,7 @@ public class FenetreClient extends JFrame{
 					// S'il l'est on affiche un message d'erreur
 					if(recherchercouleur.getSelectedItem().toString().isEmpty())
 					{
-						JOptionPane.showMessageDialog(null, "Vous avez cocher la recherche par couleur mais vous n'avez pas renseigner de valeur. Veuillez en renseigner une.\n", "Erreur", JOptionPane.ERROR_MESSAGE);
+						JOptionPane.showMessageDialog(null, "Vous avez cocher la recherche par couleur mais vous n'avez pas renseigné de valeur. Veuillez en renseigner une.\n", "Erreur", JOptionPane.ERROR_MESSAGE);
 					}
 					// Sinon on récupère le contenu du champs recherchercouleur
 					else
@@ -251,7 +241,7 @@ public class FenetreClient extends JFrame{
 				}
 				
 				// On récupère le resultat de la requête à l'aide de MyConnexionRecherche(String requête)
-				ResultSet resultRequete = MyConnexionRecherche(requete);
+				ResultSet resultRequete = bdd.MyConnexionSelect(requete);
 				// Bloc try catch pour la gestion des excetions dû à  la requête.
 				try {
 					// On laisse le panel bottom caché
@@ -313,28 +303,6 @@ public class FenetreClient extends JFrame{
 		// On ajoute le panel principal à la fenêtre
 		getContentPane().add(panel);
 	}
-	
-	// Fonction qui nous permet de recupérer dans un ResultSet le resultat de la requête passée en paramètre.
-	private ResultSet MyConnexionRecherche(String requete) {
-    	
-    	// On initialise le résultat de la requête à null.
-        ResultSet s = null;
-        
-     // Bloc try catch pour la gestion d'Exception par rapport de la connexion à  l'aide du driver ou par rapport à  la requête SQL.
-        try {
-            Class.forName("com.mysql.jdbc.Driver");
-            // Connexion à  la base de données à  l'aide du driver jdbc
-            conn = DriverManager.getConnection(url, log, pwd);
-           
-            // Création et exécution de la requête.
-            Statement statement = (Statement) conn.createStatement();
-            s = statement.executeQuery(requete);
-        } catch (SQLException | ClassNotFoundException ex) {
-            System.out.println(ex.toString());
-        }
-        // On retourne le résultat de la requête.
-        return s;
-    }
 
 	// Fonction qui nous permet d'actualiser l'affichage du résultat de la requête
 	public void rafraichirData(JPanel p, JTable o){
@@ -352,16 +320,4 @@ public class FenetreClient extends JFrame{
 					
 			}
 	}
-
-		// Class main qui créé et affiche la fenêtre principale de notre application
-		public static void main(String[] args) {
-			// On créé une instance de FenetreClient qui est la fenêtre des clients.
-			FenetreClient fc = new FenetreClient();
-			fc.pack();
-			// On place la fenêtre au centre de l'écran
-			fc.setLocationRelativeTo(null);
-			// On la rend visible
-			fc.setVisible(true);
-					
-		}
 }

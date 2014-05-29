@@ -10,8 +10,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 //Import pour les requête faites à  la base de données et pour la gestion des Exceptions
-import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
@@ -33,8 +31,6 @@ import javax.swing.JTextField;
 
 
 
-//Import pour le driver jdbc pour la connexion à  la BDD
-import com.mysql.jdbc.Statement;
 
 
 
@@ -42,11 +38,8 @@ public class FenetreAdmin extends JFrame{
 
 	private static final long serialVersionUID = -122199509843219096L;
 	// Champs pour la connexion à  la base de données avec le driver jdbc.
-	private static Connection conn;
-    public static String url = "jdbc:mysql://localhost/cave";
-    public static String pwd="";
-    public static String log="root";
-	    
+	private InteractionBDD bdd = new InteractionBDD();
+	
 	// Champs necéssaire pour garder l'identifiant de l'administrateur, le nom de la cave courante et le vin courant (pour les modifications de ces deux derniers)
 	private String idAdmin;
 	private String caveAVinCourante;
@@ -145,6 +138,7 @@ public class FenetreAdmin extends JFrame{
 	private JTextField oldMDP;
 	private JTextField newMDP;
 	private JTextField confirmationMDP;
+	
 	
 	// Constructeur avec comme paramètre l'identifiant du marchand de vin de la fenêtre de Admin
    	public FenetreAdmin(String id) {
@@ -270,7 +264,7 @@ public class FenetreAdmin extends JFrame{
 				if(checkannee.isSelected()){
 					// S'il l'est on affiche un message d'erreur
 					if(rechercherannee.getText().isEmpty()){
-						JOptionPane.showMessageDialog(null, "Vous avez cocher la recherche par année mais vous n'avez pas renseigner de valeur\nVeuillez en renseigner une", "Erreur", JOptionPane.ERROR_MESSAGE);
+						JOptionPane.showMessageDialog(null, "Vous avez cocher la recherche par année mais vous n'avez pas renseigné de valeur\nVeuillez en renseigner une", "Erreur", JOptionPane.ERROR_MESSAGE);
 					}
 					// Sinon
 					else
@@ -292,7 +286,7 @@ public class FenetreAdmin extends JFrame{
 					// S'il l'est on affiche un message d'erreur
 					if(recherchernom.getText().isEmpty())
 					{
-						JOptionPane.showMessageDialog(null, "Vous avez cocher la recherche par nom mais vous n'avez pas renseigner de valeur. Veuillez en renseigner une.\n", "Erreur", JOptionPane.ERROR_MESSAGE);
+						JOptionPane.showMessageDialog(null, "Vous avez cocher la recherche par nom mais vous n'avez pas renseigné de valeur. Veuillez en renseigner une.\n", "Erreur", JOptionPane.ERROR_MESSAGE);
 					}
 					// Sinon on récupère le contenu du champs recherchernom
 					else
@@ -306,7 +300,7 @@ public class FenetreAdmin extends JFrame{
 					// S'il l'est on affiche un message d'erreur
 					if(recherchercouleur.getSelectedItem().toString().isEmpty())
 					{
-						JOptionPane.showMessageDialog(null, "Vous avez cocher la recherche par couleur mais vous n'avez pas renseigner de valeur. Veuillez en renseigner une.\n", "Erreur", JOptionPane.ERROR_MESSAGE);
+						JOptionPane.showMessageDialog(null, "Vous avez cocher la recherche par couleur mais vous n'avez pas renseigné de valeur. Veuillez en renseigner une.\n", "Erreur", JOptionPane.ERROR_MESSAGE);
 					}
 					// Sinon on récupère le contenu du champs recherchercouleur
 					else
@@ -351,7 +345,7 @@ public class FenetreAdmin extends JFrame{
 				}
 				
 				// On récupère le resultat de la requête à l'aide de MyConnexionRecherche(String requête)
-				ResultSet resultRequete = MyConnexionSelect(requete);
+				ResultSet resultRequete = bdd.MyConnexionSelect(requete);
 				// Bloc try catch pour la gestion des excetions dû à  la requête.
 				try {
 					// On laisse le panel bottom caché
@@ -462,7 +456,7 @@ public class FenetreAdmin extends JFrame{
 					// On fini la préparation de la requête en ajoutant les paramètres nécessaires à la requête
 					requete += "'" + t[0]+ "','" + t[1] + "'," + idAdmin + ")";
 					// Nous effectuons la requête à l'aide de la fonction MyConnexionInsertDeleteUpdate(String requete).
-					boolean statut = MyConnexionInsertDeleteUpdate(requete);
+					boolean statut = bdd.MyConnexionInsertDeleteUpdate(requete);
 					// Si la requête à échouer, nous affichons un message d'erreur et nous remettons les champs d'ajout de la cave à vide.
 					if(!(statut)){
 						JOptionPane.showMessageDialog(null, "La cave " + t[0] + " n'a pas été ajoutée dans la base de données.\n", "Erreur", JOptionPane.ERROR_MESSAGE);
@@ -624,7 +618,7 @@ public class FenetreAdmin extends JFrame{
 					// On fini la préparation de la requête en ajoutant le paramètre nécessaire à la requête
 					requete += t[0] + "'";
 					// Nous effectuons la requête à l'aide de la fonction MyConnexionInsertDeleteUpdate(String requete).
-					boolean statut = MyConnexionInsertDeleteUpdate(requete);
+					boolean statut = bdd.MyConnexionInsertDeleteUpdate(requete);
 					// Si la requête à échouer, nous affichons un message d'erreur et nous remettons le champ de suppression de la cave à vide.
 					if(!(statut)){
 						JOptionPane.showMessageDialog(null, "La cave " + t[0] + "n'a pas été supprimée de votre base de données.\n", "Erreur", JOptionPane.ERROR_MESSAGE);
@@ -721,14 +715,14 @@ public class FenetreAdmin extends JFrame{
 					// On fini la préparation de la requête de récupération de l'ancien mot de passe en ajoutant le paramètre nécessaire à la requête.
 					select += idAdmin + " AND motDePasse=MD5('" + t[0] + "')";
 					// On récupère le resultat de la requête à l'aide de MyConnexionSelect(String requête)
-					ResultSet changeMDP = MyConnexionSelect(select);
+					ResultSet changeMDP = bdd.MyConnexionSelect(select);
 					try {
 						// Si le résultat de la requête select contient une ou des données
 						if(changeMDP.next()){
 							// On fini la préparation de la requête de mise à jour du en ajoutant les paramètres nécessaires à la requête.
 							update += t[2] + "') WHERE utilisateur.identifiantUtilisateur = " + idAdmin;
 							// Nous effectuons la requête à l'aide de la fonction MyConnexionInsertDeleteUpdate(String requete).
-							boolean statut = MyConnexionInsertDeleteUpdate(update);
+							boolean statut = bdd.MyConnexionInsertDeleteUpdate(update);
 							// Si la requête à réussi, nous affichons un message pour dire que le mot de passe a été changé.
 							// Et nous remettons tous les champs à vide.
 							if(statut){
@@ -843,7 +837,7 @@ public class FenetreAdmin extends JFrame{
 					// On fini la préparation de la requête en ajoutant les paramètres nécessaires à la requête
 					requete += t[0] + "','"+ caveAVinCourante + "'," + idAdmin + ")";
 					// Nous effectuons la requête à l'aide de la fonction MyConnexionInsertDeleteUpdate(String requete).
-					boolean statut = MyConnexionInsertDeleteUpdate(requete);
+					boolean statut = bdd.MyConnexionInsertDeleteUpdate(requete);
 					// Si la requête à échouer, nous affichons un message d'erreur et nous remettons le champ à vide.
 					if(!(statut)){
 						JOptionPane.showMessageDialog(null, "Une étagère à la position " + t[0] + " n'a pas été ajoutée dans la base de données.\n", "Erreur", JOptionPane.ERROR_MESSAGE);
@@ -859,6 +853,7 @@ public class FenetreAdmin extends JFrame{
 				// On met à jour les listes etagereAModifier et etagereASupprimer
 				MAJpanelEtageres(etagereAModifier);
 				MAJpanelEtageres(etagereASupprimer);
+				MAJpanelRangement(listeetagere, listebouteille, listevin);
 			}
 		});
 		
@@ -954,7 +949,7 @@ public class FenetreAdmin extends JFrame{
 					// On fini la préparation de la requête en ajoutant le paramètre nécessaire à la requête
 					requete += t[0] + "'";
 					// On récupère le resultat de la requête à l'aide de MyConnexionSelect(String requête)
-					ResultSet statut = MyConnexionSelect(requete);
+					ResultSet statut = bdd.MyConnexionSelect(requete);
 					// Bloc try catch pour la gestion des excetions dû à  la requête.
 					try {
 						// Si la requête a renvoyé des données, nous mettons ces données dans les champs de modification de l'étagère 
@@ -1008,7 +1003,7 @@ public class FenetreAdmin extends JFrame{
 							requete += "positionEtagère='"+ t[1] + "'";
 							requete += " WHERE identifiantEtagère=" + t[0];
 							// Nous effectuons la requête à l'aide de la fonction MyConnexionInsertDeleteUpdate(String requete).
-							boolean statut = MyConnexionInsertDeleteUpdate(requete);
+							boolean statut = bdd.MyConnexionInsertDeleteUpdate(requete);
 							// Si la requête à réussi, nous affichons un message pour dire que l'étagère a été modifié.
 							// Et nous recachons le panel bottomEtageres.
 							if(statut){
@@ -1024,6 +1019,7 @@ public class FenetreAdmin extends JFrame{
 						// On effectue une mise à jour des listes etagereAModifier et etagereASupprimer
 						MAJpanelEtageres(etagereAModifier);
 						MAJpanelEtageres(etagereASupprimer);
+						MAJpanelRangement(listeetagere, listebouteille, listevin);
 					}
 				});
 		// On ajoute au panel bottomEtageres le bouton updateDataEtagere
@@ -1082,7 +1078,7 @@ public class FenetreAdmin extends JFrame{
 					// On fini la préparation de la requête en ajoutant le paramètre nécessaire à la requête
 					requete += t[0] + "'";
 					// Nous effectuons la requête à l'aide de la fonction MyConnexionInsertDeleteUpdate(String requete).
-					boolean status = MyConnexionInsertDeleteUpdate(requete);
+					boolean status = bdd.MyConnexionInsertDeleteUpdate(requete);
 					// Si la requête à échouer, nous affichons un message d'erreur et nous remettons le champ de suppression de l'étagère à vide.
 					if(!(status)){
 						JOptionPane.showMessageDialog(null, "L'étagère de la position " + t[0] + " n'a pas été supprimé dans la base de données", "Erreur", JOptionPane.ERROR_MESSAGE);
@@ -1098,6 +1094,7 @@ public class FenetreAdmin extends JFrame{
 				// Mise à jour des listes etagereAModifier et etagereASupprimer
 				MAJpanelEtageres(etagereAModifier);
 				MAJpanelEtageres(etagereASupprimer);
+				MAJpanelRangement(listeetagere, listebouteille, listevin);
 			}
 		});
 		
@@ -1176,7 +1173,7 @@ public class FenetreAdmin extends JFrame{
 					// On fini la préparation de la requête en ajoutant les paramètres nécessaires à la requête
 					requete += t[0] + ")";
 					// Nous effectuons la requête à l'aide de la fonction MyConnexionInsertDeleteUpdate(String requete).
-					boolean statut = MyConnexionInsertDeleteUpdate(requete);
+					boolean statut = bdd.MyConnexionInsertDeleteUpdate(requete);
 					// Si la requête à échouer, nous affichons un message d'erreur et nous remettons le champ à vide.
 					if(!(statut)){
 						JOptionPane.showMessageDialog(null, "Une bouteille de " + t[0] + " litres n'a pas été ajoutée dans la base de données.\n", "Erreur", JOptionPane.ERROR_MESSAGE);
@@ -1191,6 +1188,7 @@ public class FenetreAdmin extends JFrame{
 					// On met à jour les listes bouteilleAModifier et bouteilleASupprimer
 					MAJpanelBouteilles(bouteilleAModifier);
 					MAJpanelBouteilles(bouteilleASupprimer);
+					MAJpanelRangement(listeetagere, listebouteille, listevin);
 				}
 			}
 		});
@@ -1275,7 +1273,7 @@ public class FenetreAdmin extends JFrame{
 					// On fini la préparation de la requête en ajoutant le paramètre nécessaire à la requête
 					requete += t[0];
 					// On récupère le resultat de la requête à l'aide de MyConnexionSelect(String requête)
-					ResultSet statut = MyConnexionSelect(requete);
+					ResultSet statut = bdd.MyConnexionSelect(requete);
 					// Bloc try catch pour la gestion des excetions dû à  la requête.					
 						try {
 							// Si la requête a renvoyé des données, nous mettons ces données dans les champs de modification de la bouteille 
@@ -1324,7 +1322,7 @@ public class FenetreAdmin extends JFrame{
 					requete += "taille=\'"+ t[1] + "\'";
 					requete += " WHERE identifiantBouteille=" + t[0];
 					// Nous effectuons la requête à l'aide de la fonction MyConnexionInsertDeleteUpdate(String requete).
-					boolean statut = MyConnexionInsertDeleteUpdate(requete);
+					boolean statut = bdd.MyConnexionInsertDeleteUpdate(requete);
 					// Si la requête à réussi, nous affichons un message pour dire que la bouteille a été modifié.
 					// Et nous recachons le panel bottomBouteilles.
 					if(statut){
@@ -1339,6 +1337,7 @@ public class FenetreAdmin extends JFrame{
 					// On effectue une mise à jour des listes bouteilleAModifier et bouteilleASupprimer
 					MAJpanelBouteilles(bouteilleAModifier);
 					MAJpanelBouteilles(bouteilleASupprimer);
+					MAJpanelRangement(listeetagere, listebouteille, listevin);
 				}
 				
 			}
@@ -1405,7 +1404,7 @@ public class FenetreAdmin extends JFrame{
 					// On fini la préparation de la requête de sélection en ajoutant le paramètre nécessaire à la requête
 					requeteSelect += t[0] + "\'";
 					// On récupère le resultat de la requête à l'aide de MyConnexionSelect(String requête)
-					ResultSet statut = MyConnexionSelect(requeteSelect);
+					ResultSet statut = bdd.MyConnexionSelect(requeteSelect);
 					// Bloc try catch pour la gestion des excetions dû à  la requête.					
 						try {
 							// Si la requête a renvoyé des données, nous récupérons l'identifiant de la bouteille à supprimer
@@ -1427,7 +1426,7 @@ public class FenetreAdmin extends JFrame{
 							// On fini la préparation de la requête de suppression en ajoutant le paramètre nécessaire à la requête
 							requete += " AND identifiantBouteille=" + idBottle;
 							// Nous effectuons la requête à l'aide de la fonction MyConnexionInsertDeleteUpdate(String requete).
-							boolean status = MyConnexionInsertDeleteUpdate(requete);
+							boolean status = bdd.MyConnexionInsertDeleteUpdate(requete);
 							// Si la requête à réussi, nous affichons un message pour dire que la bouteille a été supprimé.
 							// Et nous remettons le champ de suppression de la bouteille à vide.
 							if((status)){
@@ -1444,6 +1443,7 @@ public class FenetreAdmin extends JFrame{
 						// On met à jour les listes bouteilleAModifier et bouteilleASupprimer
 						MAJpanelBouteilles(bouteilleAModifier);
 						MAJpanelBouteilles(bouteilleASupprimer);
+						MAJpanelRangement(listeetagere, listebouteille, listevin);
 				}
 			}
 		});
@@ -1586,7 +1586,7 @@ public class FenetreAdmin extends JFrame{
 						// On fini la préparation de la requête en ajoutant les paramètres nécessaires à la requête
 						requete += "'" + t[0] + "','"+ t[1] + "','" + t[2] + "','" + t[3] + "','" + t[4] + "'," + t[5] + ")";
 						// Nous effectuons la requête à l'aide de la fonction MyConnexionInsertDeleteUpdate(String requete).
-						boolean statut = MyConnexionInsertDeleteUpdate(requete);
+						boolean statut = bdd.MyConnexionInsertDeleteUpdate(requete);
 						// Si la requête à échouer, nous affichons un message d'erreur et nous remettons le champ à vide.
 						if(!(statut)){
 							JOptionPane.showMessageDialog(null, "Le vin " + t[4] + " n'a pas été ajoutée dans la base de données.\n", "Erreur", JOptionPane.ERROR_MESSAGE);
@@ -1612,6 +1612,7 @@ public class FenetreAdmin extends JFrame{
 					// On met à jour les listes vinAModifier et vinASupprimer
 					MAJpanelVins(vinAModifier);
 					MAJpanelVins(vinASupprimer);
+					MAJpanelRangement(listeetagere, listebouteille, listevin);
 				}
 			}
 		});
@@ -1719,7 +1720,7 @@ public class FenetreAdmin extends JFrame{
 					// On fini la préparation de la requête en ajoutant le paramètre nécessaire à la requête
 					requete += t[0];
 					// On récupère le resultat de la requête à l'aide de MyConnexionSelect(String requête)
-					ResultSet statut = MyConnexionSelect(requete);
+					ResultSet statut = bdd.MyConnexionSelect(requete);
 					// Bloc try catch pour la gestion des excetions dû à  la requête.					
 						try {
 							// Si la requête a renvoyé des données, nous mettons ces données dans les champs de modification du vin 
@@ -1789,7 +1790,7 @@ public class FenetreAdmin extends JFrame{
 						requete += "regionVin='"+ t[0] + "', domaineVin='" + t[1] + "', châteauVin='" + t[2] + "', couleur='" + t[3] + "', cepageVin='" + t[4] + "', dateVin=" + t[5];
 						requete += " WHERE identifiantVin=" + vinCourant;
 						// Nous effectuons la requête à l'aide de la fonction MyConnexionInsertDeleteUpdate(String requete).
-						boolean statut = MyConnexionInsertDeleteUpdate(requete);
+						boolean statut = bdd.MyConnexionInsertDeleteUpdate(requete);
 						// Si la requête à réussi, nous affichons un message pour dire que la vin a été modifié.
 						// Et nous recachons le panel bottomVins.
 						if((statut)){
@@ -1805,6 +1806,7 @@ public class FenetreAdmin extends JFrame{
 					// On met à jour les listes vinAModifier et vinASupprimer
 					MAJpanelVins(vinAModifier);
 					MAJpanelVins(vinASupprimer);
+					MAJpanelRangement(listeetagere, listebouteille, listevin);
 				}
 				
 			}
@@ -1867,7 +1869,7 @@ public class FenetreAdmin extends JFrame{
 					// On fini la préparation de la requête en ajoutant le paramètre nécessaire à la requête
 					requete += t[0];
 					// Nous effectuons la requête à l'aide de la fonction MyConnexionInsertDeleteUpdate(String requete).
-					boolean statut = MyConnexionInsertDeleteUpdate(requete);
+					boolean statut = bdd.MyConnexionInsertDeleteUpdate(requete);
 					// Si la requête à échouer, nous affichons un message d'erreur et nous remettons le champ de suppression de vin à vide.
 					if(!(statut)){
 						JOptionPane.showMessageDialog(null, "Le vin d'identifiant " + t[0] + "n'a pas été supprimée de votre base de données.\n", "Erreur", JOptionPane.ERROR_MESSAGE);
@@ -1883,6 +1885,7 @@ public class FenetreAdmin extends JFrame{
 				// Mise à jour des listes vinAModifier et vinASupprimer
 				MAJpanelVins(vinAModifier);
 				MAJpanelVins(vinASupprimer);
+				MAJpanelRangement(listeetagere, listebouteille, listevin);
 			}
 		});
 		
@@ -1969,8 +1972,8 @@ public class FenetreAdmin extends JFrame{
 					requeteSelectBottle += t[1] + "";
 					requeteSelectEtagere += t[0] + "\'";
 					// On effectue les deux select
-					ResultSet statutBottle = MyConnexionSelect(requeteSelectBottle);
-					ResultSet statutEtagere = MyConnexionSelect(requeteSelectEtagere);
+					ResultSet statutBottle = bdd.MyConnexionSelect(requeteSelectBottle);
+					ResultSet statutEtagere = bdd.MyConnexionSelect(requeteSelectEtagere);
 						try {
 							// Si la sélection des bouteilles à donner un résultat on récupère l'identifiant du premier résultat
 							if(statutBottle.first()){
@@ -2002,7 +2005,7 @@ public class FenetreAdmin extends JFrame{
 							// On fini de préparer la requête d'insert avec tous les champs nécessaires à la requête.
 							requeteInsert += idBottle + "," + t[2] + "," + idEtagere + ")";
 							// On effectue le insert
-							boolean status = MyConnexionInsertDeleteUpdate(requeteInsert);
+							boolean status = bdd.MyConnexionInsertDeleteUpdate(requeteInsert);
 							// Si la requête n'a pas fonctionné, on aura une erreur. On met tous les champs à vide
 							if(!(status)){
 								JOptionPane.showMessageDialog(null, "Il y a eu une erreur", "Erreur", JOptionPane.ERROR_MESSAGE);
@@ -2032,47 +2035,6 @@ public class FenetreAdmin extends JFrame{
 		panelRangement.add(nord,BorderLayout.CENTER);
 	}
 	
-	// Fonction qui nous permet de recupérer dans un ResultSet le resultat de la requête passée en paramètre.
-	private ResultSet MyConnexionSelect(String requete) {
-    	
-    	// Resultat de la requête.
-        ResultSet s = null;
-        
-        // Mise en forme de la requête vue que nous enregistrons les mots de passe en encodant en MD5
-        try {
-            Class.forName("com.mysql.jdbc.Driver");
-            // Connexion à la base de données
-            conn = DriverManager.getConnection(url, log, pwd);
-           
-            // Création et exécution de la requête.
-            Statement statement = (Statement) conn.createStatement();
-            s = statement.executeQuery(requete);
-        } catch (SQLException | ClassNotFoundException ex) {
-            System.out.println(ex.toString());
-        }
-    	// On retourne le résultat de la requête pour pouvoir faire le traitement en conséquence.
-        return s;
-    }
-
-	// Fonction qui renvoie true si la requete s'est exécutée correctement, false sinon.
-	private boolean MyConnexionInsertDeleteUpdate(String requete) {
-        try {
-            Class.forName("com.mysql.jdbc.Driver");
-            // Connexion à la base de données
-            conn = DriverManager.getConnection(url, log, pwd);
-           
-            // Création et exécution de la requête.
-            Statement statement = (Statement) conn.createStatement();
-            statement.executeUpdate(requete);
-         // On retourne true si la requête a fonctionné.
-           return true;
-        } catch (SQLException | ClassNotFoundException ex) {
-            System.out.println(ex.toString());
-        }
-    	// On retourne false si la requête n'a pas fonctionné.
-        return false;
-	}
-	
 	// Fonction qui nous permet d'actualiser l'affichage du résultat de la requête dans onglet Recherche
 	public void rafraichirDataRecherche(JPanel p, JTable o){
 		// On enlève tous les éléments du panel bottom
@@ -2100,7 +2062,7 @@ public class FenetreAdmin extends JFrame{
 	public void creerListeCave(JComboBox<String> c){
 		c.setPreferredSize(new Dimension(200,30));
 		c.addItem("");
-		ResultSet statement = MyConnexionSelect("SELECT * FROM  caveavin WHERE Utilisateur_identifiantUtilisateur=" + idAdmin);
+		ResultSet statement = bdd.MyConnexionSelect("SELECT * FROM  caveavin WHERE Utilisateur_identifiantUtilisateur=" + idAdmin);
 		try {
 			while(statement.next()){
 				String nomCaveSup =statement.getString("nomCave");
@@ -2122,7 +2084,7 @@ public class FenetreAdmin extends JFrame{
 		c.setPreferredSize(new Dimension(200,30));
 		c.addItem("");
 		String req = "SELECT * FROM vins";
-		ResultSet statement = MyConnexionSelect(req);
+		ResultSet statement = bdd.MyConnexionSelect(req);
 		try {
 			while(statement.next()){
 				String nomVinRes =statement.getString("identifiantVin");
@@ -2143,7 +2105,7 @@ public class FenetreAdmin extends JFrame{
 		c.setPreferredSize(new Dimension(200,30));
 		c.addItem("");
 		String req = "SELECT * FROM bouteille";
-		ResultSet statement = MyConnexionSelect(req);
+		ResultSet statement = bdd.MyConnexionSelect(req);
 		try {
 			while(statement.next()){
 				String tailleBouteilleRes = statement.getString("taille");
@@ -2165,7 +2127,7 @@ public class FenetreAdmin extends JFrame{
 		c.setPreferredSize(new Dimension(200,30));
 		c.addItem("");
 		String req = "SELECT * FROM etagère WHERE CaveAVin_Utilisateur_identifiantUtilisateur = " + idAdmin + " AND CaveAVin_nomCave = '" + caveAVinCourante + "'";
-		ResultSet statement = MyConnexionSelect(req);
+		ResultSet statement = bdd.MyConnexionSelect(req);
 		try {
 			while(statement.next()){
 				String posEtagereRes =statement.getString("positionEtagère");
@@ -2192,8 +2154,8 @@ public class FenetreAdmin extends JFrame{
 		c.setPreferredSize(new Dimension(200,30));
 		c.addItem("");
 		// Requete pour ne selectionner que les bouteilles non utilisées.  
-		String req = "SELECT * FROM bouteille LEFT JOIN bouteille_has_vins ON bouteille.identifiantBouteille = bouteille_has_vins.Bouteille_identifiantBouteille WHERE bouteille_has_vins.Bouteille_identifiantBouteille IS NULL";
-		ResultSet statement = MyConnexionSelect(req);
+		String req = "SELECT * FROM bouteille"; //LEFT JOIN bouteille_has_vins ON bouteille.identifiantBouteille = bouteille_has_vins.Bouteille_identifiantBouteille WHERE bouteille_has_vins.Bouteille_identifiantBouteille IS NULL";
+		ResultSet statement = bdd.MyConnexionSelect(req);
 		try {
 			while(statement.next()){
 				String tailleBouteilleRes = statement.getString("taille");
