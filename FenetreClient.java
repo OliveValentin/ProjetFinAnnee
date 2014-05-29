@@ -340,10 +340,17 @@ public class FenetreClient extends JFrame{
 	public void rafraichirData(JPanel p, JTable o){
 			// On enlève tous les éléments du panel bottom
 			p.removeAll();
-			// On lui ajoute au nord les entêtes du tableau
-			p.add(o.getTableHeader(), BorderLayout.NORTH);
-			// On lui ajoute au centre les données du résultat de la requête
-			p.add(o, BorderLayout.CENTER);
+			if(o == null){
+				p.setVisible(false);
+			}
+			else
+			{
+				// On lui ajoute au nord les entêtes du tableau
+				p.add(o.getTableHeader(), BorderLayout.NORTH);
+				// On lui ajoute au centre les données du résultat de la requête
+				p.add(o, BorderLayout.CENTER);
+					
+			}
 	}
 
 		// Class main qui créé et affiche la fenêtre principale de notre application
