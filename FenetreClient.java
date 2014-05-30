@@ -150,12 +150,7 @@ public class FenetreClient extends JFrame{
 				// On cree un tableau de String pour recuperer les elements selectionnes
 				String [] t = new String[3];
 				// On prepare notre requete de recherche
-				String requete = "SELECT * FROM `vins` WHERE";
-				
-				// Si aucune case n'est cochee c'est que l'utilisateur n'a pas selectionne d'option de recherche donc on lui affiche un message d'erreur
-				if(!(checkannee.isSelected()) && !(checknom.isSelected()) && !(checkcouleur.isSelected())){
-					JOptionPane.showMessageDialog(null, "Veuillez selectionner une option de recherche.\n", "Erreur", JOptionPane.ERROR_MESSAGE);
-				}
+				String requete = "SELECT * FROM vins, bouteille_has_vins WHERE vins.identifiantVin=bouteille_has_vins.Vins_identifiantVin";
 				
 				// Si l'option recherche par annee est cochee, on regarde si le champs de recherche n'est pas vide.
 				if(checkannee.isSelected()){
@@ -210,17 +205,17 @@ public class FenetreClient extends JFrame{
 				// Si deux des trois options de recherche sont cochees, on prepare la requete avec les deux parametres coches.
 				// Si l'une des trois options de recherche est cochee, prepare la requete avec le parametre coche.
 				if(checknom.isSelected()){
-					requete += " `cepageVin`='" + t[1] + "'";
+					requete += " AND cepageVin='" + t[1] + "'";
 					if(checkannee.isSelected()){
-						requete += " AND `dateVin`=" +  t[0];
+						requete += " AND bouteille_has_vins.dateVin=" +  t[0];
 						if(checkcouleur.isSelected()){
-							requete += " AND `couleur`='" + t[2] + "'";
+							requete += " AND couleur='" + t[2] + "'";
 						}
 					}
 					else
 					{
 						if(checkcouleur.isSelected()){
-							requete += " AND `couleur`='" + t[2] + "'";
+							requete += " AND couleur='" + t[2] + "'";
 						}
 					}
 					
@@ -228,19 +223,18 @@ public class FenetreClient extends JFrame{
 				else
 				{
 					if(checkannee.isSelected()){
-						requete += " `dateVin`=" +  t[0];
+						requete += " AND bouteille_has_vins.dateVin=" +  t[0];
 						if(checkcouleur.isSelected()){
-							requete += " AND `couleur`='" + t[2] + "'";
+							requete += " AND couleur='" + t[2] + "'";
 						}
 					}
 					else
 					{
 						if(checkcouleur.isSelected()){
-							requete += " `couleur`='" + t[2] + "'";
+							requete += " AND couleur='" + t[2] + "'";
 						}
 					}
 				}
-				
 				// On recupere le resultat de la requete a l'aide de MyConnexionRecherche(String requete)
 				ResultSet resultRequete = bdd.MyConnexionSelect(requete);
 				// Bloc try catch pour la gestion des excetions du a  la requete.
@@ -248,7 +242,7 @@ public class FenetreClient extends JFrame{
 					// On laisse le panel bottom cache
 					bottom.setVisible(false);
 					// Si le resultat de la requete contient une ou des donnees
-					if((resultRequete.isBeforeFirst())){
+					if((resultRequete != null) && (resultRequete.isBeforeFirst())){
 						int i = 0;
 						// On cree un tableau donnees qui recuperera toutes les donnees du resultat de la requete.
 						// Pour cela on cree un tableau de String a deux dimensions de 25 lignes et de 6 colonnes.
