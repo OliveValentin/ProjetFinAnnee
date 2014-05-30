@@ -66,6 +66,8 @@ CREATE TABLE IF NOT EXISTS `Cave`.`Etagère` (
   CONSTRAINT `fk_Etagère_CaveAVin1`
     FOREIGN KEY (`CaveAVin_nomCave` , `CaveAVin_Utilisateur_identifiantUtilisateur`)
     REFERENCES `Cave`.`CaveAVin` (`nomCave` , `Utilisateur_identifiantUtilisateur`)
+	ON DELETE CASCADE
+	ON UPDATE CASCADE
 	)
 ENGINE = InnoDB;
 
@@ -102,6 +104,8 @@ CREATE TABLE IF NOT EXISTS `Cave`.`Bouteille_has_Vins` (
   CONSTRAINT `fk_Bouteille_has_Vins_Etagère1`
     FOREIGN KEY (`Etagère_identifiantEtagère`)
     REFERENCES `Cave`.`Etagère` (`identifiantEtagère`)
+	ON DELETE CASCADE
+	ON UPDATE CASCADE
 	)
 ENGINE = InnoDB;
 
