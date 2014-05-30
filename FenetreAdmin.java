@@ -5,17 +5,18 @@ import java.awt.GridLayout;
 import java.awt.HeadlessException;
 import java.awt.Toolkit;
 
-//Import pour les écouteurs des boutons
+//Import pour les ecouteurs des boutons
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-//Import pour les requête faites à  la base de données et pour la gestion des Exceptions
+//Import pour les requete faites a  la base de donnees et pour la gestion des Exceptions
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
 
 
-//Import pour les éléments du JFrame
+
+//Import pour les elements du JFrame
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
@@ -37,15 +38,15 @@ import javax.swing.JTextField;
 public class FenetreAdmin extends JFrame{
 
 	private static final long serialVersionUID = -122199509843219096L;
-	// Champs pour la connexion à  la base de données avec le driver jdbc.
+	// Champs pour la connexion a  la base de donnees avec le driver jdbc.
 	private InteractionBDD bdd = new InteractionBDD();
 	
-	// Champs necéssaire pour garder l'identifiant de l'administrateur, le nom de la cave courante et le vin courant (pour les modifications de ces deux derniers)
+	// Champs necessaire pour garder l'identifiant de l'administrateur, le nom de la cave courante et le vin courant (pour les modifications de ces deux derniers)
 	private String idAdmin;
 	private String caveAVinCourante;
 	private String vinCourant;
 	
-	// La fenêtre principale contient 5 onglets principals
+	// La fenetre principale contient 5 onglets principals
 	private		JTabbedPane tabbedPane = new JTabbedPane();;
 	private		JPanel		panelRecherche;
 	private		JPanel		panelAjoutCave;
@@ -53,23 +54,23 @@ public class FenetreAdmin extends JFrame{
 	private		JPanel		panelSuppressionCave;
 	private		JPanel		panelModificationMDP;
 	
-	// Champs nécessaire pour la recherche de vins (Onglet Recherche)
+	// Champs necessaire pour la recherche de vins (Onglet Recherche)
 	private JTextField rechercherannee;
 	private JTextField recherchernom;
 	private JComboBox<String> recherchercouleur;
-	private JCheckBox checkannee = new JCheckBox("Année");
+	private JCheckBox checkannee = new JCheckBox("Annee");
 	private JCheckBox checknom = new JCheckBox("Nom");
 	private JCheckBox checkcouleur = new JCheckBox("Couleur");
 	
-	// Champ pour le résultat de la recherche (Onglet Recherche)
+	// Champ pour le resultat de la recherche (Onglet Recherche)
 	JTable tableau;
 	
-	// Champs nécessaire pour l'ajout d'une cave (Onglet AjoutCave)
+	// Champs necessaire pour l'ajout d'une cave (Onglet AjoutCave)
 	private JTextField nomCaveAAjouter = new JTextField();
 	private JTextArea commentaireCave = new JTextArea();
 	private JButton ajouterCave = new JButton("Ajouter Cave");
 	
-	// Champs nécessaire pour la modification d'une cave (Onglet ModificationCave)
+	// Champs necessaire pour la modification d'une cave (Onglet ModificationCave)
 	private JComboBox<String> caveAModifier = new JComboBox<String>();
 	private JButton modifierCave = new JButton("Modifier Cave");
 	
@@ -80,16 +81,16 @@ public class FenetreAdmin extends JFrame{
 	private		JPanel		panelVins;
 	private		JPanel		panelRangement;
 	
-	// Dans le panel de l'onglet de modification d'étagères, nous avons 3 onglets 
+	// Dans le panel de l'onglet de modification d'etageres, nous avons 3 onglets 
 	private		JTabbedPane tabbedPaneModifEtageres;
 	private		JPanel		panelAjoutEtageres;
 	private		JPanel		panelModifEtageres;
 	private		JPanel		panelSupprimerEtageres;
 	
-	// Champs nécessaire pour la modification d'une étagère (Onglet ModifEtagère)
+	// Champs necessaire pour la modification d'une etagere (Onglet ModifEtagere)
 	private JComboBox<String> etagereAModifier = new JComboBox<String>();
 	
-	// Champs nécessaire pour la suppression d'une étagère (Onglet SupprimerEtagère)
+	// Champs necessaire pour la suppression d'une etagere (Onglet SupprimerEtagere)
 	private JComboBox<String> etagereASupprimer = new JComboBox<String>();
 
 	// Dans le panel de l'onglet de modification de bouteilles, nous avons 3 onglets 
@@ -98,10 +99,10 @@ public class FenetreAdmin extends JFrame{
 	private		JPanel		panelModifBouteilles;
 	private		JPanel		panelSupprimerBouteilles;
 		
-	// Champs nécessaire pour la modification d'une bouteille (Onglet ModifBouteilles)
+	// Champs necessaire pour la modification d'une bouteille (Onglet ModifBouteilles)
 	private JComboBox<String> bouteilleAModifier = new JComboBox<String>();
 	
-	// Champs nécessaire pour la suppression d'une bouteille (Onglet SupprimerBouteilles)
+	// Champs necessaire pour la suppression d'une bouteille (Onglet SupprimerBouteilles)
 	private JComboBox<String> bouteilleASupprimer = new JComboBox<String>();
 
 	// Dans le panel de l'onglet de modification de vins, nous avons 3 onglets 
@@ -111,7 +112,7 @@ public class FenetreAdmin extends JFrame{
 	private		JPanel		panelSupprimerVins;
 	
 					
-	// Champs nécessaire pour l'ajout d'un vin (Onglet AjoutVin)
+	// Champs necessaire pour l'ajout d'un vin (Onglet AjoutVin)
 	private		JTextField regionVins;
 	private		JTextField domaineVins;
 	private		JTextField châteauVins;
@@ -119,53 +120,53 @@ public class FenetreAdmin extends JFrame{
 	private		JTextField cepageVins;
 	private		JTextField dateVins;
 	
-	// Champs nécessaire pour la modification d'un vin (Onglet ModifVins)
+	// Champs necessaire pour la modification d'un vin (Onglet ModifVins)
 	private JComboBox<String> vinAModifier = new JComboBox<String>();
 	
-	// Champs nécessaire pour la suppression d'un vin (Onglet SupprimerVins)
+	// Champs necessaire pour la suppression d'un vin (Onglet SupprimerVins)
 	private JComboBox<String> vinASupprimer = new JComboBox<String>();
 	
-	// Champs nécessaire pour le rangement des vins/bouteilles sur les étagères (Onglet Rangement)
+	// Champs necessaire pour le rangement des vins/bouteilles sur les etageres (Onglet Rangement)
 	private JComboBox<String> listeetagere = new JComboBox<String>();
 	private JComboBox<String> listebouteille = new JComboBox<String>();
 	private JComboBox<String> listevin = new JComboBox<String>();
 		
-	// Champs nécessaire pour la suppression d'une cave (Onglet SuppressionCave)
+	// Champs necessaire pour la suppression d'une cave (Onglet SuppressionCave)
 	private JComboBox<String> caveASupprimer = new JComboBox<String>();
 	private JButton supprimerCave = new JButton("Supprimer Cave");
 	
-	// Champs nécessaire pour la modification du mot de passe d'une cave (Onglet ModificationMDP)
+	// Champs necessaire pour la modification du mot de passe d'une cave (Onglet ModificationMDP)
 	private JTextField oldMDP;
 	private JTextField newMDP;
 	private JTextField confirmationMDP;
 	
 	
-	// Constructeur avec comme paramètre l'identifiant du marchand de vin de la fenêtre de Admin
+	// Constructeur avec comme parametre l'identifiant du marchand de vin de la fenetre de Admin
    	public FenetreAdmin(String id) {
-   		// On appel le constructeur de JFrame avec un paramètre qui est le nom de la fenêtre
-   		super("La cave à vin - Gestion administrateur");
+   		// On appel le constructeur de JFrame avec un parametre qui est le nom de la fenetre
+   		super("La cave a vin - Gestion administrateur");
    		// On enregistre dans la variable globale l'identifiant du marchand de vin
 		this.idAdmin = id;
-		// Ensuite on initialise cette fenêtre
+		// Ensuite on initialise cette fenetre
 		init();
 	}
 	
 	private void init(){
 		// On dit que lorsque l'on clique sur la croix rouge on quitte
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
-		// On met la dimension du panel principal à la taille de l'écran
+		// On met la dimension du panel principal a la taille de l'ecran
 		setPreferredSize(new Dimension(Toolkit.getDefaultToolkit().getScreenSize()));
 		
 
-		// On créé le panel topPanel qui contiendra tous les éléments de la FenetreAdmin
+		// On cree le panel topPanel qui contiendra tous les elements de la FenetreAdmin
 		JPanel topPanel = new JPanel();
-		// On lui dit que l'affichage des champs se par région
+		// On lui dit que l'affichage des champs se par region
 		topPanel.setLayout(new BorderLayout());
 					
-		// On ajoute le topPanel à la fenêtre
+		// On ajoute le topPanel a la fenetre
 		getContentPane().add(topPanel);
 		
-		// On créé les différents onglets principaux
+		// On cree les differents onglets principaux
 		createRecherche();
 		createAjout();
 		createModification();
@@ -183,61 +184,84 @@ public class FenetreAdmin extends JFrame{
 		topPanel.add( tabbedPane, BorderLayout.CENTER );
 	}
 	
-	// Création du panel de Recherche
+	// Creation du panel de Recherche
 	public void createRecherche()
 	{
-		// On créé le panel panelRecherche qui contiendra tous les éléments de l'onglet Recherche de la FenetreAdmin
+		// On cree le panel panelRecherche qui contiendra tous les elements de l'onglet Recherche de la FenetreAdmin
 		panelRecherche = new JPanel();
-		// On lui dit que l'affichage des champs se par région
+		// On lui dit que l'affichage des champs se par region
 		panelRecherche.setLayout(new BorderLayout());
 	
-		// On instancie les champs de notre fenetre (JTextField pour lla recherche par année et pour celle par nom et JComboBox<String> pour la recherche par couleur)
+		// On instancie les champs de notre fenetre (JTextField pour lla recherche par annee et pour celle par nom et JComboBox<String> pour la recherche par couleur)
 		rechercherannee = new JTextField();
 		recherchernom = new JTextField();
 		recherchercouleur = new JComboBox<String>();
+		// On cree le panel toptop qui contiendra le bouton se connecter
 		
-		// On créé le panel top qui contiendra le bouton de recherche et le panel innerTop
+		final JPanel toptop = new JPanel();
+		// On lui dit que l'affichage des champs se par region
+		toptop.setLayout(new BorderLayout());
+				
+		// On cree un bouton Se connecter que l'on ajoute a l'est du panel toptop
+		JButton deconnexion = new JButton("Se Déconnecter");
+		toptop.add(deconnexion, BorderLayout.EAST);
+		
+		// On lui attribue un ecouteur
+		deconnexion.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent ae) {
+				// On demande au marchand s'il souhaite vraiment se déconnecter
+				int option = JOptionPane.showConfirmDialog(panelRecherche, new JLabel("Voulez-vous vous déconnecter ?"), "Deconnexion" ,JOptionPane.YES_NO_OPTION);
+				// S'il dit on on quitte
+				if(option == JOptionPane.YES_OPTION){
+					setVisible(false);
+				}
+			}
+		});
+
+				
+		// On cree le panel top qui contiendra le bouton de recherche et le panel innerTop
 		JPanel top = new JPanel();
-		// On lui dit que l'affichage des champs se par région
+		// On lui dit que l'affichage des champs se par region
 		top.setLayout(new BorderLayout());
 		
-		// On créé le panel toptop qui contiendra les champs de recherche de vins
+		add(toptop, BorderLayout.NORTH);
+		// On cree le panel toptop qui contiendra les champs de recherche de vins
 		JPanel innerTop = new JPanel();
 		// On lui dit que l'affichage des champs se fera sous forme de grille avec 3 ligne et 3 colonnes
 		innerTop.setLayout(new GridLayout(3,3));
 		
-		// On met la dimension du JTextField associé à recherche par année à  200px de large et 30px de hauteur
+		// On met la dimension du JTextField associe a recherche par annee a  200px de large et 30px de hauteur
 		rechercherannee.setPreferredSize(new Dimension(200,30));
-		// On ajoute au panel innerTop le champ de recherche par année
-		innerTop.add(new JLabel("Année à rechercher :"));
+		// On ajoute au panel innerTop le champ de recherche par annee
+		innerTop.add(new JLabel("Annee a rechercher :"));
 		innerTop.add(rechercherannee);
 		innerTop.add(checkannee);
 		
-		// On met la dimension du JTextField associé à recherche par nom à  200px de large et 30px de hauteur
+		// On met la dimension du JTextField associe a recherche par nom a  200px de large et 30px de hauteur
 		recherchernom.setPreferredSize(new Dimension(200,30));
 		// On ajoute au panel innerTop le champ de recherche par nom
-		innerTop.add(new JLabel("Nom à rechercher :"));
+		innerTop.add(new JLabel("Nom a rechercher :"));
 		innerTop.add(recherchernom);
 		innerTop.add(checknom);
 		
-		// On met la dimension du JComboxBox<String> associé à recherche par couleur à  200px de large et 30px de hauteur
+		// On met la dimension du JComboxBox<String> associe a recherche par couleur a  200px de large et 30px de hauteur
 		recherchercouleur.setPreferredSize(new Dimension(200,30));
-		// On ajoute au JComboBox<String> les différentes couleur du vin
+		// On ajoute au JComboBox<String> les differentes couleur du vin
 		recherchercouleur.addItem("");
 		recherchercouleur.addItem("blanc");
 		recherchercouleur.addItem("rose");
 		recherchercouleur.addItem("rouge");
 		// On ajoute au panel innerTop le champ de recherche par couleur
-		innerTop.add(new JLabel("Couleur à rechercher :"));
+		innerTop.add(new JLabel("Couleur a rechercher :"));
 		innerTop.add(recherchercouleur);
 		innerTop.add(checkcouleur);
 		
 		// On ajoute au panel top le panel innerTop au centre
 		top.add(innerTop, BorderLayout.CENTER);
 		
-		// On créé le panel bottom qui contiendra les résultats de la recherche. on lui donne le mot clé final pour pouvoir l'utiliser dans l'écouteur du bouton Rechercher
+		// On cree le panel bottom qui contiendra les resultats de la recherche. on lui donne le mot cle final pour pouvoir l'utiliser dans l'ecouteur du bouton Rechercher
 		final JPanel bottom = new JPanel();
-		// On lui dit que l'affichage des champs se par région
+		// On lui dit que l'affichage des champs se par region
 		bottom.setLayout(new BorderLayout()); 
 		// On chache ce panel
 		bottom.setVisible(false);
@@ -245,35 +269,35 @@ public class FenetreAdmin extends JFrame{
 		// On cree un bouton Rechercher
 		JButton searchButton = new JButton("Rechercher");
 		
-		// On lui attribue un écouteur (c'est ici que l'on gérera si la recherche se fait par nom,couleur, ou année.)
+		// On lui attribue un ecouteur (c'est ici que l'on gerera si la recherche se fait par nom,couleur, ou annee.)
 		
-		// On lui attribue un écouteur
+		// On lui attribue un ecouteur
 		searchButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ae) {
-				// On créé un tableau de String pour récupérer les éléments sélectionnés
+				// On cree un tableau de String pour recuperer les elements selectionnes
 				String [] t = new String[3];
-				// On prépare notre requête de recherche
+				// On prepare notre requete de recherche
 				String requete = "SELECT * FROM `vins` WHERE";
 				
-				// Si aucune case n'est cochée c'est que l'utilisateur n'a pas sélectionné d'option de recherche donc on lui affiche un message d'erreur
+				// Si aucune case n'est cochee c'est que l'utilisateur n'a pas selectionne d'option de recherche donc on lui affiche un message d'erreur
 				if(!(checkannee.isSelected()) && !(checknom.isSelected()) && !(checkcouleur.isSelected())){
-					JOptionPane.showMessageDialog(null, "Veuillez sélectionner une option de recherche.\n", "Erreur", JOptionPane.ERROR_MESSAGE);
+					JOptionPane.showMessageDialog(null, "Veuillez selectionner une option de recherche.\n", "Erreur", JOptionPane.ERROR_MESSAGE);
 				}
 				
-				// Si l'option recherche par année est cochée, on regarde si le champs de recherche n'est pas vide.
+				// Si l'option recherche par annee est cochee, on regarde si le champs de recherche n'est pas vide.
 				if(checkannee.isSelected()){
 					// S'il l'est on affiche un message d'erreur
 					if(rechercherannee.getText().isEmpty()){
-						JOptionPane.showMessageDialog(null, "Vous avez cocher la recherche par année mais vous n'avez pas renseigné de valeur\nVeuillez en renseigner une", "Erreur", JOptionPane.ERROR_MESSAGE);
+						JOptionPane.showMessageDialog(null, "Vous avez cocher la recherche par annee mais vous n'avez pas renseigner de valeur\nVeuillez en renseigner une", "Erreur", JOptionPane.ERROR_MESSAGE);
 					}
 					// Sinon
 					else
 					{
-						// Si le champs ne contient pas exactement 4 caractères, on affiche une erreur
+						// Si le champs ne contient pas exactement 4 caracteres, on affiche une erreur
 						if(rechercherannee.getText().length() != 4){
-							JOptionPane.showMessageDialog(null, "Veuillez en renseigner une année valide", "Erreur", JOptionPane.ERROR_MESSAGE);
+							JOptionPane.showMessageDialog(null, "Veuillez en renseigner une annee valide", "Erreur", JOptionPane.ERROR_MESSAGE);
 						}
-						// Sinon on récupère le contenu du champs rechercherannée
+						// Sinon on recupere le contenu du champs rechercherannee
 						else
 						{
 							t[0] = rechercherannee.getText();
@@ -281,37 +305,37 @@ public class FenetreAdmin extends JFrame{
 					}
 				}
 				
-				// Si l'option recherche par nom est cochée, on regarde si le champs de recherche n'est pas vide.
+				// Si l'option recherche par nom est cochee, on regarde si le champs de recherche n'est pas vide.
 				if(checknom.isSelected()){
 					// S'il l'est on affiche un message d'erreur
 					if(recherchernom.getText().isEmpty())
 					{
-						JOptionPane.showMessageDialog(null, "Vous avez cocher la recherche par nom mais vous n'avez pas renseigné de valeur. Veuillez en renseigner une.\n", "Erreur", JOptionPane.ERROR_MESSAGE);
+						JOptionPane.showMessageDialog(null, "Vous avez cocher la recherche par nom mais vous n'avez pas renseigner de valeur. Veuillez en renseigner une.\n", "Erreur", JOptionPane.ERROR_MESSAGE);
 					}
-					// Sinon on récupère le contenu du champs recherchernom
+					// Sinon on recupere le contenu du champs recherchernom
 					else
 					{
 						t[1] = recherchernom.getText();
 					}
 				}
 				
-				// Si l'option recherche par couleur est cochée, on regarde si le champs de recherche n'est pas vide.
+				// Si l'option recherche par couleur est cochee, on regarde si le champs de recherche n'est pas vide.
 				if(checkcouleur.isSelected()){
 					// S'il l'est on affiche un message d'erreur
 					if(recherchercouleur.getSelectedItem().toString().isEmpty())
 					{
-						JOptionPane.showMessageDialog(null, "Vous avez cocher la recherche par couleur mais vous n'avez pas renseigné de valeur. Veuillez en renseigner une.\n", "Erreur", JOptionPane.ERROR_MESSAGE);
+						JOptionPane.showMessageDialog(null, "Vous avez cocher la recherche par couleur mais vous n'avez pas renseigner de valeur. Veuillez en renseigner une.\n", "Erreur", JOptionPane.ERROR_MESSAGE);
 					}
-					// Sinon on récupère le contenu du champs recherchercouleur
+					// Sinon on recupere le contenu du champs recherchercouleur
 					else
 					{
 						t[2] = recherchercouleur.getSelectedItem().toString();
 					}
 				}
 				
-				// Si les trois options de recherche sont cochées, on prépare la requête avec les trois paramètres.
-				// Si deux des trois options de recherche sont cochées, on prépare la requête avec les deux paramètres cochés.
-				// Si l'une des trois options de recherche est cochée, prépare la requête avec le paramètre coché.
+				// Si les trois options de recherche sont cochees, on prepare la requete avec les trois parametres.
+				// Si deux des trois options de recherche sont cochees, on prepare la requete avec les deux parametres coches.
+				// Si l'une des trois options de recherche est cochee, prepare la requete avec le parametre coche.
 				if(checknom.isSelected()){
 					requete += " `cepageVin`='" + t[1] + "'";
 					if(checkannee.isSelected()){
@@ -344,19 +368,19 @@ public class FenetreAdmin extends JFrame{
 					}
 				}
 				
-				// On récupère le resultat de la requête à l'aide de MyConnexionRecherche(String requête)
+				// On recupere le resultat de la requete a l'aide de MyConnexionRecherche(String requete)
 				ResultSet resultRequete = bdd.MyConnexionSelect(requete);
-				// Bloc try catch pour la gestion des excetions dû à  la requête.
+				// Bloc try catch pour la gestion des excetions du a  la requete.
 				try {
-					// On laisse le panel bottom caché
+					// On laisse le panel bottom cache
 					bottom.setVisible(false);
-					// Si le résultat de la requête contient une ou des données
+					// Si le resultat de la requete contient une ou des donnees
 					if((resultRequete.isBeforeFirst())){
 						int i = 0;
-						// On créé un tableau donnees qui récupèrera toutes les données du résultat de la requête.
-						// Pour cela on créé un tableau de String à deux dimensions de 25 lignes et de 6 colonnes.
+						// On cree un tableau donnees qui recuperera toutes les donnees du resultat de la requete.
+						// Pour cela on cree un tableau de String a deux dimensions de 25 lignes et de 6 colonnes.
 						String[][] 	donnees = new String[25][6];
-						// Tant qu'il y a une donnée, on enregistre ses champs.
+						// Tant qu'il y a une donnee, on enregistre ses champs.
 						while(resultRequete.next()) {
 							donnees[i][0] = resultRequete.getString("regionVin");
 							donnees[i][1] = resultRequete.getString("domaineVin");
@@ -366,26 +390,26 @@ public class FenetreAdmin extends JFrame{
 							donnees[i][5] = resultRequete.getString("dateVin") + "\n";
 							i++;
 						}
-						// On créé un tableau entetes qui contient toutes les entêtes du résultat de la requête.
-						String[] entetes = {"Region", "Domaine", "Château", "Couleur", "Cépage", "Année"};
-						// On créé un nouveau JTable avec les données récupérées.
+						// On cree un tableau entetes qui contient toutes les entetes du resultat de la requete.
+						String[] entetes = {"Region", "Domaine", "Chateau", "Couleur", "Cepage", "Annee"};
+						// On cree un nouveau JTable avec les donnees recuperees.
 						tableau = new JTable(donnees,entetes);
-						// On rend le contenu non editable du tableau contenant les résultats de la recherche.
+						// On rend le contenu non editable du tableau contenant les resultats de la recherche.
 						tableau.setEnabled(false);;
 					}
 					else
 					{
-						// On créé le tableau de string à deux dimensions qui contient Nous n'avons trouvé aucun vin correspondant à votre recherche
+						// On cree le tableau de string a deux dimensions qui contient Nous n'avons trouve aucun vin correspondant a votre recherche
 						String[][] 	donnees = new String[1][1];
-						donnees[0][0] = "Nous n'avons trouvé aucun vin correspondant à votre recherche";
-						// On créé un tableau entetes qui contient NoResultFound.
+						donnees[0][0] = "Nous n'avons trouve aucun vin correspondant a votre recherche";
+						// On cree un tableau entetes qui contient NoResultFound.
 						String[] entetes = {"NoResultFound"};
-						// On créé un nouveau JTable avec ces données.
+						// On cree un nouveau JTable avec ces donnees.
 						tableau = new JTable(donnees,entetes);
-						// On rend le contenu non editable du tableau contenant ces données.
+						// On rend le contenu non editable du tableau contenant ces donnees.
 						tableau.setEnabled(false);;
 					}
-					// On fait appel à rafraichirData(JPanel bottom, JTable tableau) pour rafraîchir les données d'une recherche à l'autre.
+					// On fait appel a rafraichirData(JPanel bottom, JTable tableau) pour rafraichir les donnees d'une recherche a l'autre.
 					rafraichirDataRecherche(bottom, tableau);
 					// Ensuite on affiche le panel bottom.
 					bottom.setVisible(true);
@@ -404,75 +428,75 @@ public class FenetreAdmin extends JFrame{
 		panelRecherche.add(bottom, BorderLayout.CENTER);
 	}
 
-	// Création du panel d'Ajout d'une cave
+	// Creation du panel d'Ajout d'une cave
 	public void createAjout()
 	{
-		// On créé le panel panelAjoutCave qui contiendra tous les éléments de l'onglet AjoutCave de la FenetreAdmin
+		// On cree le panel panelAjoutCave qui contiendra tous les elements de l'onglet AjoutCave de la FenetreAdmin
 		panelAjoutCave = new JPanel();
-		// On lui dit que l'affichage des champs se par région
+		// On lui dit que l'affichage des champs se par region
 		panelAjoutCave.setLayout(new BorderLayout());
 
-		// On créé le panel nord qui le panel inner et le bouton ajouterCave
+		// On cree le panel nord qui le panel inner et le bouton ajouterCave
 		JPanel nord = new JPanel();
-		// On lui dit que l'affichage des champs se par région
+		// On lui dit que l'affichage des champs se par region
 		nord.setLayout(new BorderLayout());
 		
-		// On créé le panel inner qui contiendra les champs pour ajouter une cave
+		// On cree le panel inner qui contiendra les champs pour ajouter une cave
 		JPanel inner = new JPanel();
 		// On lui dit que l'affichage des champs se fera sous forme de grille avec 3 ligne et 3 colonnes
 		inner.setLayout(new GridLayout(2,2));
 		
-		// On met la dimension du JTextField associé au nom de la cave à  200px de large et 30px de hauteur
+		// On met la dimension du JTextField associe au nom de la cave a  200px de large et 30px de hauteur
 		nomCaveAAjouter.setPreferredSize(new Dimension(200,30));
 		// On ajoute au panel inner le champ de nom de la cave
 		inner.add(new JLabel("Nom de la cave :"));
 		inner.add(nomCaveAAjouter);
 				
-		// On met la dimension du JTextField associé au commentaire de la cave à  200px de large et 30px de hauteur
+		// On met la dimension du JTextField associe au commentaire de la cave a  200px de large et 30px de hauteur
 		commentaireCave.setPreferredSize(new Dimension(200,30));
 		// On ajoute au panel inner le champ de nom de la cave
-		inner.add(new JLabel("Commentaire à faire :"));
+		inner.add(new JLabel("Commentaire a faire :"));
 		inner.add(commentaireCave);
 		
 		// On ajoute au panel nord le panel inner au nord
 		nord.add(inner, BorderLayout.NORTH);
 		
-		// On attribue un écouteur au bouton aujouterCave
+		// On attribue un ecouteur au bouton aujouterCave
 		ajouterCave.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ae) {
-				// On prépare la requête d'ajout
+				// On prepare la requete d'ajout
 				String requete = "INSERT INTO caveavin(nomCave, commentaire, Utilisateur_identifiantUtilisateur) VALUES (";
-				// On créé un tableau de String pour récupérer les champs pour l'ajout de la cave
+				// On cree un tableau de String pour recuperer les champs pour l'ajout de la cave
 				String [] t = new String[2];
 				t[0] = nomCaveAAjouter.getText();
 				t[1] = commentaireCave.getText();
 				
-				// Si au moins un argument n'est pas renseigné par l'utilisateur, nous lui affichons un message d'erreur.
+				// Si au moins un argument n'est pas renseigne par l'utilisateur, nous lui affichons un message d'erreur.
 				if(t[0].isEmpty() || t[1].isEmpty()){
-					JOptionPane.showMessageDialog(null, "Veuillez renseigner les trois champs demandés.\n", "Erreur", JOptionPane.ERROR_MESSAGE);
+					JOptionPane.showMessageDialog(null, "Veuillez renseigner les trois champs demandes.\n", "Erreur", JOptionPane.ERROR_MESSAGE);
 				}
 				// Sinon
 				else{
-					// On fini la préparation de la requête en ajoutant les paramètres nécessaires à la requête
+					// On fini la preparation de la requete en ajoutant les parametres necessaires a la requete
 					requete += "'" + t[0]+ "','" + t[1] + "'," + idAdmin + ")";
-					// Nous effectuons la requête à l'aide de la fonction MyConnexionInsertDeleteUpdate(String requete).
+					// Nous effectuons la requete a l'aide de la fonction MyConnexionInsertDeleteUpdate(String requete).
 					boolean statut = bdd.MyConnexionInsertDeleteUpdate(requete);
-					// Si la requête à échouer, nous affichons un message d'erreur et nous remettons les champs d'ajout de la cave à vide.
+					// Si la requete a echouer, nous affichons un message d'erreur et nous remettons les champs d'ajout de la cave a vide.
 					if(!(statut)){
-						JOptionPane.showMessageDialog(null, "La cave " + t[0] + " n'a pas été ajoutée dans la base de données.\n", "Erreur", JOptionPane.ERROR_MESSAGE);
+						JOptionPane.showMessageDialog(null, "La cave " + t[0] + " n'a pas ete ajoutee dans la base de donnees.\n", "Erreur", JOptionPane.ERROR_MESSAGE);
 						nomCaveAAjouter.setText("");
 						commentaireCave.setText("");
 					}
-					// Sinon on affiche un message de succès et nous remettons les champs d'ajout de la cave à vide.
+					// Sinon on affiche un message de succes et nous remettons les champs d'ajout de la cave a vide.
 					else
 					{
-						JOptionPane.showMessageDialog(null, "La cave " + t[0] + " a été ajoutée dans la base de données.\n", "Information", JOptionPane.INFORMATION_MESSAGE);
+						JOptionPane.showMessageDialog(null, "La cave " + t[0] + " a ete ajoutee dans la base de donnees.\n", "Information", JOptionPane.INFORMATION_MESSAGE);
 						nomCaveAAjouter.setText("");
 						commentaireCave.setText("");
 					}
-					// On fait appel à MAJpanelModificationCave(JComboBox<String> caveAModifier) pour rafraîchir les données de la liste de caveAModifier.
+					// On fait appel a MAJpanelModificationCave(JComboBox<String> caveAModifier) pour rafraichir les donnees de la liste de caveAModifier.
 					MAJpanelCave(caveAModifier);
-					// On fait appel à MAJpanelSuppressionCave(JComboBox<String> caveASupprimer) pour rafraîchir les données de la liste de caveASupprimer.
+					// On fait appel a MAJpanelSuppressionCave(JComboBox<String> caveASupprimer) pour rafraichir les donnees de la liste de caveASupprimer.
 					MAJpanelCave(caveASupprimer);
 				}
 			}
@@ -485,59 +509,59 @@ public class FenetreAdmin extends JFrame{
 		panelAjoutCave.add(nord, BorderLayout.CENTER);
 	}
 
-	// Création du panel de modification d'une cave
+	// Creation du panel de modification d'une cave
 	public void createModification()
 	{
-		// On créé le panel panelModificationCave qui contiendra tous les éléments de l'onglet ModifCave de la FenetreAdmin
+		// On cree le panel panelModificationCave qui contiendra tous les elements de l'onglet ModifCave de la FenetreAdmin
 		panelModificationCave = new JPanel();
-		// On lui dit que l'affichage des champs se par région
+		// On lui dit que l'affichage des champs se par region
 		panelModificationCave.setLayout(new BorderLayout());
 
-		// On créé le panel nord qui le panel inner et le bouton modifierCave
+		// On cree le panel nord qui le panel inner et le bouton modifierCave
 		final JPanel nord = new JPanel();
-		// On lui dit que l'affichage des champs se par région
+		// On lui dit que l'affichage des champs se par region
 		nord.setLayout(new BorderLayout());
 
-		// On créé le panel inner qui contiendra les champs pour modifier une cave
+		// On cree le panel inner qui contiendra les champs pour modifier une cave
 		JPanel inner = new JPanel();
 		// On lui dit que l'affichage des champs se fera sous forme de grille avec 3 ligne et 3 colonnes
 		inner.setLayout(new GridLayout(1,2));
 		
-		// On créé la liste de cave à modifier
+		// On cree la liste de cave a modifier
 		creerListeCave(caveAModifier);
 
-		// On ajoute au panel inner la liste de cave à modifier
-		inner.add(new JLabel("Nom de la cave à modifier:"));
+		// On ajoute au panel inner la liste de cave a modifier
+		inner.add(new JLabel("Nom de la cave a modifier:"));
 		inner.add(caveAModifier);
 		
 		// On ajoute au panel nord le panel inner au nord
 		nord.add(inner, BorderLayout.NORTH);
 		
-		// On attribue un écouteur au bouton modifierCave
+		// On attribue un ecouteur au bouton modifierCave
 		modifierCave.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ae) {
-				// On créé un tableau de String pour récupérer les champs pour la modification de la cave
+				// On cree un tableau de String pour recuperer les champs pour la modification de la cave
 				String [] t = new String[1];
 				t[0] = caveAModifier.getSelectedItem().toString();;
 				
-				// Si aucune cave n'est sélectionnée, on affiche un message d'erreur.
+				// Si aucune cave n'est selectionnee, on affiche un message d'erreur.
 				if(t[0].isEmpty()){
-					JOptionPane.showMessageDialog(null, "Veuillez sélectionner une cave à modifier.\n", "Erreur", JOptionPane.ERROR_MESSAGE);
+					JOptionPane.showMessageDialog(null, "Veuillez selectionner une cave a modifier.\n", "Erreur", JOptionPane.ERROR_MESSAGE);
 				}
 				// Sinon
 				else
 				{
-					// On met dans une variable globale le nom de la cave sélectionnée
+					// On met dans une variable globale le nom de la cave selectionnee
 					caveAVinCourante = t[0];
 					// On cache le panel nord.
 					nord.setVisible(false);
-					// On affiche la table d'onglet tabbedPaneModif qui permet la gestion de la cave à vin.
+					// On affiche la table d'onglet tabbedPaneModif qui permet la gestion de la cave a vin.
 					tabbedPaneModif.setVisible(true);
 					// On ajoute au panelModificationCave la barre d'onglet tabbedPaneModif au centre
 					panelModificationCave.add(tabbedPaneModif, BorderLayout.CENTER);
 					
 				}
-				// On met à jour les listes de vins, de bouteilles et d'étagères contenu dans les onglets de tabbedPaneModif
+				// On met a jour les listes de vins, de bouteilles et d'etageres contenu dans les onglets de tabbedPaneModif
 				MAJpanelVins(vinAModifier);
 				MAJpanelVins(vinASupprimer);
 				MAJpanelBouteilles(bouteilleAModifier);
@@ -554,7 +578,7 @@ public class FenetreAdmin extends JFrame{
 		// On ajoute au panelModificationCave le panel nord au centre
 		panelModificationCave.add(nord, BorderLayout.CENTER);
 		
-		// On créé les onglets de tabbedPaneModif
+		// On cree les onglets de tabbedPaneModif
 		createPanelEtageres();
 		createPanelBouteilles();
 		createPanelVins();
@@ -562,7 +586,7 @@ public class FenetreAdmin extends JFrame{
 		
 		// On les ajoute dans la barre d'onglet tabbedPaneModif qui est la barre d'onglet pour la modification d'une cave.
 		tabbedPaneModif = new JTabbedPane();
-		tabbedPaneModif.addTab("Gestion étagères", panelEtageres);
+		tabbedPaneModif.addTab("Gestion etageres", panelEtageres);
 		tabbedPaneModif.addTab("Gestion bouteilles", panelBouteilles);
 		tabbedPaneModif.addTab("Gestion vins", panelVins);
 		tabbedPaneModif.addTab("Rangement des vins", panelRangement);
@@ -571,66 +595,66 @@ public class FenetreAdmin extends JFrame{
 		
 	}
 	
-	// Création du panel de suppression d'une cave
+	// Creation du panel de suppression d'une cave
 	public void createSuppression()
 	{
-		// On créé le panel panelSuppressionCave qui contiendra tous les éléments de l'onglet SuppressionCave de la FenetreAdmin
+		// On cree le panel panelSuppressionCave qui contiendra tous les elements de l'onglet SuppressionCave de la FenetreAdmin
 		panelSuppressionCave = new JPanel();
-		// On lui dit que l'affichage des champs se par région
+		// On lui dit que l'affichage des champs se par region
 		panelSuppressionCave.setLayout(new BorderLayout());
 
-		// On créé le panel nord qui le panel inner et le bouton ajouterCave
+		// On cree le panel nord qui le panel inner et le bouton ajouterCave
 		JPanel nord = new JPanel();
-		// On lui dit que l'affichage des champs se par région
+		// On lui dit que l'affichage des champs se par region
 		nord.setLayout(new BorderLayout());
 		
-		// On créé le panel inner qui contiendra les champs pour supprimer une cave
+		// On cree le panel inner qui contiendra les champs pour supprimer une cave
 		JPanel inner = new JPanel();
 		// On lui dit que l'affichage des champs se fera sous forme de grille avec 3 ligne et 3 colonnes
 		inner.setLayout(new GridLayout(1,2));
 		
-		// On créé la liste de cave à supprimer
+		// On cree la liste de cave a supprimer
 		creerListeCave(caveASupprimer);
 		
-		// On ajoute au panel inner la liste de cave à supprimer
-		inner.add(new JLabel("Nom de la cave à supprimer:"));
+		// On ajoute au panel inner la liste de cave a supprimer
+		inner.add(new JLabel("Nom de la cave a supprimer:"));
 		inner.add(caveASupprimer);
 		
 		// On ajoute au panel nord le panel inner au nord
 		nord.add(inner, BorderLayout.NORTH);
 		
-		// On attribue un écouteur au bouton supprimerCave
+		// On attribue un ecouteur au bouton supprimerCave
 		supprimerCave.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ae) {
-				// On prépare la requête de suppression
+				// On prepare la requete de suppression
 				String requete = "DELETE FROM caveavin WHERE nomCave='";
-				// On créé un tableau de String pour récupérer les champs pour l'ajout de la cave
+				// On cree un tableau de String pour recuperer les champs pour l'ajout de la cave
 				String [] t = new String[1];
 				t[0] = caveASupprimer.getSelectedItem().toString();;
 				
-				// Si aucune cave n'est sélectionnée, nous affichons un message d'erreur.
+				// Si aucune cave n'est selectionnee, nous affichons un message d'erreur.
 				if(t[0].isEmpty()){
-					JOptionPane.showMessageDialog(null, "Veuillez sélectionner une cave à supprimer.\n", "Erreur", JOptionPane.ERROR_MESSAGE);
+					JOptionPane.showMessageDialog(null, "Veuillez selectionner une cave a supprimer.\n", "Erreur", JOptionPane.ERROR_MESSAGE);
 				}
 				// Sinon
 				else
 				{
-					// On fini la préparation de la requête en ajoutant le paramètre nécessaire à la requête
+					// On fini la preparation de la requete en ajoutant le parametre necessaire a la requete
 					requete += t[0] + "'";
-					// Nous effectuons la requête à l'aide de la fonction MyConnexionInsertDeleteUpdate(String requete).
+					// Nous effectuons la requete a l'aide de la fonction MyConnexionInsertDeleteUpdate(String requete).
 					boolean statut = bdd.MyConnexionInsertDeleteUpdate(requete);
-					// Si la requête à échouer, nous affichons un message d'erreur et nous remettons le champ de suppression de la cave à vide.
+					// Si la requete a echouer, nous affichons un message d'erreur et nous remettons le champ de suppression de la cave a vide.
 					if(!(statut)){
-						JOptionPane.showMessageDialog(null, "La cave " + t[0] + "n'a pas été supprimée de votre base de données.\n", "Erreur", JOptionPane.ERROR_MESSAGE);
+						JOptionPane.showMessageDialog(null, "La cave " + t[0] + "n'a pas ete supprimee de votre base de donnees.\n", "Erreur", JOptionPane.ERROR_MESSAGE);
 						caveASupprimer.setSelectedItem("");
 					}
-					// Sinon on affiche un message de succès et nous remettons le champ de suppression de la cave à vide.
+					// Sinon on affiche un message de succes et nous remettons le champ de suppression de la cave a vide.
 					else
 					{
-						JOptionPane.showMessageDialog(null, "La cave " + t[0] + " a été supprimée de votre base de données.\n", "Information", JOptionPane.INFORMATION_MESSAGE);
+						JOptionPane.showMessageDialog(null, "La cave " + t[0] + " a ete supprimee de votre base de donnees.\n", "Information", JOptionPane.INFORMATION_MESSAGE);
 						caveASupprimer.setSelectedItem("");
 					}
-					// On met à jour les listes de caveAModifier et de caveASupprimer
+					// On met a jour les listes de caveAModifier et de caveASupprimer
 					MAJpanelCave(caveAModifier);
 					MAJpanelCave(caveASupprimer);
 				}
@@ -644,19 +668,19 @@ public class FenetreAdmin extends JFrame{
 		panelSuppressionCave.add(nord, BorderLayout.CENTER);
 	}
 	
-	// Création du panel de modification du motdepasse
+	// Creation du panel de modification du motdepasse
 	public void createMDP(){
-		// On créé le panel panelModificationMDP qui contiendra tous les éléments de l'onglet ModificationMDP de la FenetreAdmin
+		// On cree le panel panelModificationMDP qui contiendra tous les elements de l'onglet ModificationMDP de la FenetreAdmin
 		panelModificationMDP = new JPanel();
-		// On lui dit que l'affichage des champs se par région
+		// On lui dit que l'affichage des champs se par region
 		panelModificationMDP.setLayout(new BorderLayout());
 
-		// On créé le panel nord qui le panel inner et le bouton ajouterCave
+		// On cree le panel nord qui le panel inner et le bouton ajouterCave
 		JPanel nord = new JPanel();
-		// On lui dit que l'affichage des champs se par région
+		// On lui dit que l'affichage des champs se par region
 		nord.setLayout(new BorderLayout());
 		
-		// On créé le panel inner qui contiendra les champs pour modifier son mot de passe dans la base de données
+		// On cree le panel inner qui contiendra les champs pour modifier son mot de passe dans la base de donnees
 		JPanel inner = new JPanel();
 		// On lui dit que l'affichage des champs se fera sous forme de grille avec 3 ligne et 3 colonnes
 		inner.setLayout(new GridLayout(3,2));
@@ -679,31 +703,31 @@ public class FenetreAdmin extends JFrame{
 		// On ajoute au panel nord le panel inner au nord
 		nord.add(inner, BorderLayout.NORTH);
 		
-		// On créé un bouton Changer le mot de passe
+		// On cree un bouton Changer le mot de passe
 		JButton changerMDP = new JButton("Changer le mot de passe.\n");
 		
-		// On lui attribut un écouteur
+		// On lui attribut un ecouteur
 		changerMDP.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ae) {
-				// On prépare la requête pour récupérer l'ancien mot de passe de l'utilisateur
+				// On prepare la requete pour recuperer l'ancien mot de passe de l'utilisateur
 				String select = "SELECT * FROM cave.utilisateur WHERE identifiantUtilisateur=";
-				// On prépare la requête mettre à jour le mot de passe de l'utilisateur avec le nouveau mot de passe
+				// On prepare la requete mettre a jour le mot de passe de l'utilisateur avec le nouveau mot de passe
 				String update = "UPDATE cave.utilisateur SET motDePasse = MD5('";
-				// On créé un tableau de String pour récupérer les champs pour l'ajout de la cave
+				// On cree un tableau de String pour recuperer les champs pour l'ajout de la cave
 				String [] t = new String[3];
 				t[0] = oldMDP.getText();
 				t[1] = newMDP.getText();
 				t[2] = confirmationMDP.getText();
 				
-				// Si au moins un argument n'est pas renseigné par l'utilisateur, nous lui affichons un message d'erreur et on met tous les champs à vide.
+				// Si au moins un argument n'est pas renseigne par l'utilisateur, nous lui affichons un message d'erreur et on met tous les champs a vide.
 				if(t[0].isEmpty() || t[1].isEmpty() || t[2].isEmpty()){
-					JOptionPane.showMessageDialog(null, "Veuillez renseigner tous les champs demandés.\n", "Erreur", JOptionPane.ERROR_MESSAGE);
+					JOptionPane.showMessageDialog(null, "Veuillez renseigner tous les champs demandes.\n", "Erreur", JOptionPane.ERROR_MESSAGE);
 					oldMDP.setText("");
 					newMDP.setText("");
 					confirmationMDP.setText("");
 				}
-				// Si le nouveau mot de passe et la confirmation de celui-ci ne sont pas égals.
-				// On affiche un message d'erreur et nous mettons tous les champs à vide.
+				// Si le nouveau mot de passe et la confirmation de celui-ci ne sont pas egals.
+				// On affiche un message d'erreur et nous mettons tous les champs a vide.
 				if(!t[1].equals(t[2])){
 					JOptionPane.showMessageDialog(null, "Le nouveau mot de passe et la confirmation ne sont pas identique.\n", "Erreur", JOptionPane.ERROR_MESSAGE);
 					newMDP.setText("");
@@ -712,40 +736,40 @@ public class FenetreAdmin extends JFrame{
 				// Sinon
 				else
 				{
-					// On fini la préparation de la requête de récupération de l'ancien mot de passe en ajoutant le paramètre nécessaire à la requête.
+					// On fini la preparation de la requete de recuperation de l'ancien mot de passe en ajoutant le parametre necessaire a la requete.
 					select += idAdmin + " AND motDePasse=MD5('" + t[0] + "')";
-					// On récupère le resultat de la requête à l'aide de MyConnexionSelect(String requête)
+					// On recupere le resultat de la requete a l'aide de MyConnexionSelect(String requete)
 					ResultSet changeMDP = bdd.MyConnexionSelect(select);
 					try {
-						// Si le résultat de la requête select contient une ou des données
+						// Si le resultat de la requete select contient une ou des donnees
 						if(changeMDP.next()){
-							// On fini la préparation de la requête de mise à jour du en ajoutant les paramètres nécessaires à la requête.
+							// On fini la preparation de la requete de mise a jour du en ajoutant les parametres necessaires a la requete.
 							update += t[2] + "') WHERE utilisateur.identifiantUtilisateur = " + idAdmin;
-							// Nous effectuons la requête à l'aide de la fonction MyConnexionInsertDeleteUpdate(String requete).
+							// Nous effectuons la requete a l'aide de la fonction MyConnexionInsertDeleteUpdate(String requete).
 							boolean statut = bdd.MyConnexionInsertDeleteUpdate(update);
-							// Si la requête à réussi, nous affichons un message pour dire que le mot de passe a été changé.
-							// Et nous remettons tous les champs à vide.
+							// Si la requete a reussi, nous affichons un message pour dire que le mot de passe a ete change.
+							// Et nous remettons tous les champs a vide.
 							if(statut){
-								JOptionPane.showMessageDialog(null, "Votre mot de passe a été changé.\n", "Information", JOptionPane.INFORMATION_MESSAGE);
+								JOptionPane.showMessageDialog(null, "Votre mot de passe a ete change.\n", "Information", JOptionPane.INFORMATION_MESSAGE);
 								oldMDP.setText("");
 								newMDP.setText("");
 								confirmationMDP.setText("");
 							}
-							// Sinon, nous affichons un message d'erreur pour dire que le mot de passe n'a pas été changé.
-							// Et nous remettons tous les champs à vide.
+							// Sinon, nous affichons un message d'erreur pour dire que le mot de passe n'a pas ete change.
+							// Et nous remettons tous les champs a vide.
 							else
 							{
-								JOptionPane.showMessageDialog(null, "Votre mot de passe n'a pas été changé.\n", "Erreur", JOptionPane.ERROR_MESSAGE);
+								JOptionPane.showMessageDialog(null, "Votre mot de passe n'a pas ete change.\n", "Erreur", JOptionPane.ERROR_MESSAGE);
 								oldMDP.setText("");
 								newMDP.setText("");
 								confirmationMDP.setText("");
 							}
 								
 						}
-						// Si le résultat de la requête select ne contient pas de données, on affiche un message d'erreur et nous mettons tous les champs à vide.
+						// Si le resultat de la requete select ne contient pas de donnees, on affiche un message d'erreur et nous mettons tous les champs a vide.
 						else
 						{
-							JOptionPane.showMessageDialog(null, "Votre mot de passe est erroné.\n", "Erreur", JOptionPane.ERROR_MESSAGE);
+							JOptionPane.showMessageDialog(null, "Votre mot de passe est errone.\n", "Erreur", JOptionPane.ERROR_MESSAGE);
 							oldMDP.setText("");
 							newMDP.setText("");
 							confirmationMDP.setText("");
@@ -766,91 +790,91 @@ public class FenetreAdmin extends JFrame{
 		
 	}
 	
-	// Création du panel de Gestion des étagères
+	// Creation du panel de Gestion des etageres
 	public void createPanelEtageres(){
-		// On créé le panel panelEtageres qui contiendra tous les éléments de l'onglet GestionEtagère de la FenetreAdmin
+		// On cree le panel panelEtageres qui contiendra tous les elements de l'onglet GestionEtagere de la FenetreAdmin
 		panelEtageres = new JPanel();
-		// On lui dit que l'affichage des champs se par région
+		// On lui dit que l'affichage des champs se par region
 		panelEtageres.setLayout(new BorderLayout());
 
-		// On créé les onglets de tabbedPaneModif
+		// On cree les onglets de tabbedPaneModif
 		createPanelAjoutEtageres();
 		createPanelModifEtageres();
 		createPanelSupprimerEtageres();
 				
-		// On les ajoute dans la barre d'onglet tabbedPaneModifEtageres qui est la barre d'onglet pour la modification d'une étagère.
+		// On les ajoute dans la barre d'onglet tabbedPaneModifEtageres qui est la barre d'onglet pour la modification d'une etagere.
 		tabbedPaneModifEtageres = new JTabbedPane();
-		tabbedPaneModifEtageres.addTab("Ajouter une étagère", panelAjoutEtageres);
-		tabbedPaneModifEtageres.addTab("Modifier une étagère", panelModifEtageres);
-		tabbedPaneModifEtageres.addTab("Supprimer une étagère", panelSupprimerEtageres);
+		tabbedPaneModifEtageres.addTab("Ajouter une etagere", panelAjoutEtageres);
+		tabbedPaneModifEtageres.addTab("Modifier une etagere", panelModifEtageres);
+		tabbedPaneModifEtageres.addTab("Supprimer une etagere", panelSupprimerEtageres);
 		
 		// On ajoute au panelEtageres la barre d'onglet tabbedPaneModifEtageres au centre 
 		panelEtageres.add(tabbedPaneModifEtageres, BorderLayout.CENTER);		
 		
 	}
 	
-	// Création du panel d'Ajout d'étagère
+	// Creation du panel d'Ajout d'etagere
 	public void createPanelAjoutEtageres(){
 		
-		// On créé le panel panelAjoutEtageres qui contiendra tous les éléments de l'onglet AjoutEtageres de la FenetreAdmin
+		// On cree le panel panelAjoutEtageres qui contiendra tous les elements de l'onglet AjoutEtageres de la FenetreAdmin
 		panelAjoutEtageres = new JPanel();
-		// On lui dit que l'affichage des champs se par région
+		// On lui dit que l'affichage des champs se par region
 		panelAjoutEtageres.setLayout(new BorderLayout());
 
-		// On créé le panel nord qui le panel innerNord et le bouton addEtagere
+		// On cree le panel nord qui le panel innerNord et le bouton addEtagere
 		JPanel nord = new JPanel();
-		// On lui dit que l'affichage des champs se par région
+		// On lui dit que l'affichage des champs se par region
 		nord.setLayout(new GridLayout(2,0));
 		
-		// On créé le panel inner qui contiendra les champs pour ajouter une étagère
+		// On cree le panel inner qui contiendra les champs pour ajouter une etagere
 		JPanel innerNord = new JPanel();
 		// On lui dit que l'affichage des champs se fera sous forme de grille avec 3 ligne et 3 colonnes
 		innerNord.setLayout(new GridLayout(1,2));
 		
 		
-		// Création et ajout du champs position dans le panel innerNord
+		// Creation et ajout du champs position dans le panel innerNord
 		final JTextField position = new JTextField();
-		innerNord.add(new JLabel("Position de l'étagère dans la cave (sans ' ou \" ): "));
+		innerNord.add(new JLabel("L'étagère à ajouter (position dans la cave): "));
 		innerNord.add(position);
 		
 		// On ajoute au panel nord le panel innerNord
 		nord.add(innerNord);
 		
-		// On créé un bouton addEtagere
-		JButton addEtagere = new JButton("Ajouter une étagère");
+		// On cree un bouton addEtagere
+		JButton addEtagere = new JButton("Ajouter une etagere");
 		
-		// On lui attribut un écouteur
+		// On lui attribut un ecouteur
 		addEtagere.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ae) {
-				// On prépare la requête d'ajout
+				// On prepare la requete d'ajout
 				String requete = "INSERT INTO etagère(positionEtagère, CaveAVin_nomCave, CaveAVin_Utilisateur_identifiantUtilisateur) VALUES ('";
-				// On créé un tableau de String pour récupérer les champs pour l'ajout de la cave
+				// On cree un tableau de String pour recuperer les champs pour l'ajout de la cave
 				String [] t = new String[1];
 				t[0] = position.getText();
 				
-				// Si l'utilisateur n'a pas donné de position, nous lui affichons un message d'erreur et nous mettons le champ à vide.
+				// Si l'utilisateur n'a pas donne de position, nous lui affichons un message d'erreur et nous mettons le champ a vide.
 				if(t[0].isEmpty()){
-					JOptionPane.showMessageDialog(null, "Veuillez renseigner tous les champs demandés.\n", "Erreur", JOptionPane.ERROR_MESSAGE);
+					JOptionPane.showMessageDialog(null, "Veuillez renseigner tous les champs demandes.\n", "Erreur", JOptionPane.ERROR_MESSAGE);
 					position.setText("");
 				}
 				else{
-					// On fini la préparation de la requête en ajoutant les paramètres nécessaires à la requête
+					// On fini la preparation de la requete en ajoutant les parametres necessaires a la requete
 					requete += t[0] + "','"+ caveAVinCourante + "'," + idAdmin + ")";
-					// Nous effectuons la requête à l'aide de la fonction MyConnexionInsertDeleteUpdate(String requete).
+					// Nous effectuons la requete a l'aide de la fonction MyConnexionInsertDeleteUpdate(String requete).
 					boolean statut = bdd.MyConnexionInsertDeleteUpdate(requete);
-					// Si la requête à échouer, nous affichons un message d'erreur et nous remettons le champ à vide.
+					// Si la requete a echouer, nous affichons un message d'erreur et nous remettons le champ a vide.
 					if(!(statut)){
-						JOptionPane.showMessageDialog(null, "Une étagère à la position " + t[0] + " n'a pas été ajoutée dans la base de données.\n", "Erreur", JOptionPane.ERROR_MESSAGE);
+						JOptionPane.showMessageDialog(null, "Une etagere a la position " + t[0] + " n'a pas ete ajoutee dans la base de donnees.\n", "Erreur", JOptionPane.ERROR_MESSAGE);
 						position.setText("");
 					}
-					// Sinon on affiche un message de succès et nous remettons le champ à vide.
+					// Sinon on affiche un message de succes et nous remettons le champ a vide.
 					else
 					{
-						JOptionPane.showMessageDialog(null, "Une étagère à la position " + t[0] + " a été ajoutée dans la base de données.\n", "Information", JOptionPane.INFORMATION_MESSAGE);
+						JOptionPane.showMessageDialog(null, "Une etagere a la position " + t[0] + " a ete ajoutee dans la base de donnees.\n", "Information", JOptionPane.INFORMATION_MESSAGE);
 						position.setText("");
 					}
 				}
-				// On met à jour les listes etagereAModifier et etagereASupprimer
+				// On met a jour les listes etagereAModifier et etagereASupprimer
 				MAJpanelEtageres(etagereAModifier);
 				MAJpanelEtageres(etagereASupprimer);
 				MAJpanelRangement(listeetagere, listebouteille, listevin);
@@ -864,53 +888,53 @@ public class FenetreAdmin extends JFrame{
 		panelAjoutEtageres.add(nord,BorderLayout.NORTH);
 	}
 
-	// Création du panel de modification d'étagère
+	// Creation du panel de modification d'etagere
 	public void createPanelModifEtageres(){
 
-		// On créé le panel panelModifEtageres qui contiendra tous les éléments de l'onglet ModifEtageres de la FenetreAdmin
+		// On cree le panel panelModifEtageres qui contiendra tous les elements de l'onglet ModifEtageres de la FenetreAdmin
 		panelModifEtageres = new JPanel();
-		// On lui dit que l'affichage des champs se par région
+		// On lui dit que l'affichage des champs se par region
 		panelModifEtageres.setLayout(new BorderLayout());
 
-		// On créé le panel nord qui le panel innerNord et le bouton addEtagere
+		// On cree le panel nord qui le panel innerNord et le bouton addEtagere
 		JPanel nord = new JPanel();
-		// On lui dit que l'affichage des champs se par région
+		// On lui dit que l'affichage des champs se par region
 		nord.setLayout(new BorderLayout());
 		
-		// On créé le panel inner qui contiendra les champs pour modifier une étagère
+		// On cree le panel inner qui contiendra les champs pour modifier une etagere
 		JPanel inner = new JPanel();
 		// On lui dit que l'affichage des champs se fera sous forme de grille avec 1 ligne et 0 colonnes
 		inner.setLayout(new GridLayout(1,0));
 		
-		// On créé la liste des étagères.
+		// On cree la liste des etageres.
 		creerListeEtagere(etagereAModifier);
 		
 		// On ajoute le champs etagereAModifier au panel inner
-		inner.add(new JLabel("La position à modifier: \n"));
+		inner.add(new JLabel("L'étagère à modifier : \n"));
 		inner.add(etagereAModifier);
 		
 		// On ajoute au panel nord le panel inner au nord
 		nord.add(inner, BorderLayout.NORTH);
 		
-		// On créé le panel bottomEtageres qui contiendra les champs à remplir avant de modifier une étagère
+		// On cree le panel bottomEtageres qui contiendra les champs a remplir avant de modifier une etagere
 		final JPanel bottomEtageres = new JPanel();
 		// On lui dit que l'affichage des champs se fera sous forme de grille avec 5 ligne et 2 colonnes
 		bottomEtageres.setLayout(new GridLayout(5,2));
 		
-		// On créé les JTextField pour ajouter les données de l'étagère à modifier dedans.
+		// On cree les JTextField pour ajouter les donnees de l'etagere a modifier dedans.
 		final JTextField idEtagere = new JTextField();
 		final JTextField positionEtagere = new JTextField();
 		final JTextField idCave = new JTextField();
 		final JTextField idUser = new JTextField();
 		
-		// On ajoute au panel bottomEtageres le champ identifiant Etagère
-		bottomEtageres.add(new JLabel("Identifiant étagère : "));
+		// On ajoute au panel bottomEtageres le champ identifiant Etagere
+		bottomEtageres.add(new JLabel("Identifiant etagere : "));
 		bottomEtageres.add(idEtagere);
 		// On rend ce champ non modifiable
 		idEtagere.setEditable(false);
 		
-		// On ajoute au panel bottomEtageres le champ position Etagère
-		bottomEtageres.add(new JLabel("Position de l'étagère (sans ' ou \" ) : "));
+		// On ajoute au panel bottomEtageres le champ position Etagere
+		bottomEtageres.add(new JLabel("Position de l'etagere (sans ' ou \" ) : "));
 		bottomEtageres.add(positionEtagere);
 		
 		// On ajoute au panel bottomEtageres le champ identifiant cave
@@ -928,41 +952,41 @@ public class FenetreAdmin extends JFrame{
 		// On cache le panel bottomEtageres
 		bottomEtageres.setVisible(false);
 		
-		// On créé un nouveau bouton modifierEtageres
-		JButton modifierEtageres = new JButton("Modifier l'étagère sélectionnée");
+		// On cree un nouveau bouton modifierEtageres
+		JButton modifierEtageres = new JButton("Modifier l'etagere selectionnee");
 		
-		// On lui attribue un écouteur
+		// On lui attribue un ecouteur
 		modifierEtageres.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ae) {
-				// On prépare la requête de selection
+				// On prepare la requete de selection
 				String requete = "SELECT * FROM etagère WHERE positionEtagère='";
-				// On créé un tableau de String pour récupérer le champ pour la modification de l'étagère
+				// On cree un tableau de String pour recuperer le champ pour la modification de l'etagere
 				String [] t = new String[1];
 				t[0] = etagereAModifier.getSelectedItem().toString();;
 				
 				// Si l'argument est vide, nous affichons un message d'erreur.
 				if(t[0].isEmpty()){
-					JOptionPane.showMessageDialog(null, "Veuillez sélectionner une étagère à modifier.\n", "Erreur", JOptionPane.ERROR_MESSAGE);
+					JOptionPane.showMessageDialog(null, "Veuillez selectionner une etagere a modifier.\n", "Erreur", JOptionPane.ERROR_MESSAGE);
 				}
 				//Sinon
 				else{
-					// On fini la préparation de la requête en ajoutant le paramètre nécessaire à la requête
+					// On fini la preparation de la requete en ajoutant le parametre necessaire a la requete
 					requete += t[0] + "'";
-					// On récupère le resultat de la requête à l'aide de MyConnexionSelect(String requête)
+					// On recupere le resultat de la requete a l'aide de MyConnexionSelect(String requete)
 					ResultSet statut = bdd.MyConnexionSelect(requete);
-					// Bloc try catch pour la gestion des excetions dû à  la requête.
+					// Bloc try catch pour la gestion des excetions du a  la requete.
 					try {
-						// Si la requête a renvoyé des données, nous mettons ces données dans les champs de modification de l'étagère 
+						// Si la requete a renvoye des donnees, nous mettons ces donnees dans les champs de modification de l'etagere 
 						if(statut.first()){
 							idEtagere.setText(statut.getString("identifiantEtagère"));
 							positionEtagere.setText(statut.getString("positionEtagère"));
 							idCave.setText(statut.getString("CaveAVin_nomCave"));
 							idUser.setText(statut.getString("CaveAVin_Utilisateur_identifiantUtilisateur"));
 						}
-						// Sinon, nous affichons un message d'erreur et nous mettons l'etagereAModifier à vide.
+						// Sinon, nous affichons un message d'erreur et nous mettons l'etagereAModifier a vide.
 						else
 						{
-							JOptionPane.showMessageDialog(null, "L'étagère à la position " + t[0] + " n'a pas été sélectionner dans la base de données.\n", "Erreur", JOptionPane.ERROR_MESSAGE);
+							JOptionPane.showMessageDialog(null, "L'etagere a la position " + t[0] + " n'a pas ete selectionner dans la base de donnees.\n", "Erreur", JOptionPane.ERROR_MESSAGE);
 							etagereAModifier.setSelectedItem("");
 						}
 					} catch (HeadlessException | SQLException e) {
@@ -977,15 +1001,15 @@ public class FenetreAdmin extends JFrame{
 		// On ajoute au panel nord le bouton modifierEtageres au sud.
 		nord.add(modifierEtageres, BorderLayout.SOUTH);
 		
-		// Nous crééons un bouton updateDataEtagere.
-		JButton updateDataEtagere = new JButton("Valider les données\n");
+		// Nous creeons un bouton updateDataEtagere.
+		JButton updateDataEtagere = new JButton("Valider les donnees\n");
 		
-		// On lui attribue un écouteur
+		// On lui attribue un ecouteur
 		updateDataEtagere.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent ae) {
-						// On prépare la requête d'update
+						// On prepare la requete d'update
 						String requete = "UPDATE etagère SET ";
-						// On créé un tableau de String pour récupérer le champ pour la modification de l'étagère
+						// On cree un tableau de String pour recuperer le champ pour la modification de l'etagere
 						String [] t = new String[4];
 						t[0] = idEtagere.getText();
 						t[1] = positionEtagere.getText();
@@ -999,24 +1023,24 @@ public class FenetreAdmin extends JFrame{
 						// Sinon
 						else
 						{
-							// On fini la préparation de la requête en ajoutant les paramètres nécessaires à la requête
+							// On fini la preparation de la requete en ajoutant les parametres necessaires a la requete
 							requete += "positionEtagère='"+ t[1] + "'";
 							requete += " WHERE identifiantEtagère=" + t[0];
-							// Nous effectuons la requête à l'aide de la fonction MyConnexionInsertDeleteUpdate(String requete).
+							// Nous effectuons la requete a l'aide de la fonction MyConnexionInsertDeleteUpdate(String requete).
 							boolean statut = bdd.MyConnexionInsertDeleteUpdate(requete);
-							// Si la requête à réussi, nous affichons un message pour dire que l'étagère a été modifié.
+							// Si la requete a reussi, nous affichons un message pour dire que l'etagere a ete modifie.
 							// Et nous recachons le panel bottomEtageres.
 							if(statut){
-								JOptionPane.showMessageDialog(null, "L'étagère d'identifiant " + t[0] + " a été modifié dans la base de données.\n", "Information", JOptionPane.INFORMATION_MESSAGE);
+								JOptionPane.showMessageDialog(null, "L'etagere d'identifiant " + t[0] + " a ete modifie dans la base de donnees.\n", "Information", JOptionPane.INFORMATION_MESSAGE);
 								bottomEtageres.setVisible(false);
 							}
 							// Sinon, nous affichons un message d'erreur
 							else
 							{
-								JOptionPane.showMessageDialog(null, "L'étagère d'identifiant " + t[0] + " n'a pas été modifié dans la base de données.\n", "Erreur", JOptionPane.ERROR_MESSAGE);
+								JOptionPane.showMessageDialog(null, "L'etagere d'identifiant " + t[0] + " n'a pas ete modifie dans la base de donnees.\n", "Erreur", JOptionPane.ERROR_MESSAGE);
 							}
 						}
-						// On effectue une mise à jour des listes etagereAModifier et etagereASupprimer
+						// On effectue une mise a jour des listes etagereAModifier et etagereASupprimer
 						MAJpanelEtageres(etagereAModifier);
 						MAJpanelEtageres(etagereASupprimer);
 						MAJpanelRangement(listeetagere, listebouteille, listevin);
@@ -1025,73 +1049,73 @@ public class FenetreAdmin extends JFrame{
 		// On ajoute au panel bottomEtageres le bouton updateDataEtagere
 		bottomEtageres.add(updateDataEtagere);
 		
-		// On ajoute au panelModifEtageres le panel nord à la position nord et le panel bottomEtageres à la position sud.
+		// On ajoute au panelModifEtageres le panel nord a la position nord et le panel bottomEtageres a la position sud.
 		panelModifEtageres.add(nord, BorderLayout.NORTH);
 		panelModifEtageres.add(bottomEtageres, BorderLayout.SOUTH);
 	}
 
-	// Création du panel de suppression d'étagère
+	// Creation du panel de suppression d'etagere
 	public void createPanelSupprimerEtageres(){
-		// On créé le panel panelSupprimerEtageres qui contiendra tous les éléments de l'onglet SupprimerEtageres de la FenetreAdmin
+		// On cree le panel panelSupprimerEtageres qui contiendra tous les elements de l'onglet SupprimerEtageres de la FenetreAdmin
 		panelSupprimerEtageres = new JPanel();
-		// On lui dit que l'affichage des champs se par région
+		// On lui dit que l'affichage des champs se par region
 		panelSupprimerEtageres.setLayout(new BorderLayout());
 
-		// On créé le panel nord qui le panel inner et le bouton supprimerEtageres
+		// On cree le panel nord qui le panel inner et le bouton supprimerEtageres
 		JPanel nord = new JPanel();
 		// On lui dit que l'affichage des champs se fera sous forme de grille avec 2 lignes et 0 colonne
 		nord.setLayout(new GridLayout(2,0));
 		
-		// On créé le panel inner qui contiendra les champs pour supprimer une cave
+		// On cree le panel inner qui contiendra les champs pour supprimer une cave
 		JPanel inner = new JPanel();
 		// On lui dit que l'affichage des champs se fera sous forme de grille avec 1 ligne et 2 colonnes
 		inner.setLayout(new GridLayout(1,2));
 		
-		// On créé la liste des étagères à supprimer
+		// On cree la liste des etageres a supprimer
 		creerListeEtagere(etagereASupprimer);
 		
-		// On ajoute au panel inner la liste d'étagères à supprimer
-		inner.add(new JLabel("Etagère(s) à supprimer:"));
+		// On ajoute au panel inner la liste d'etageres a supprimer
+		inner.add(new JLabel("Etagère(s) a supprimer:"));
 		inner.add(etagereASupprimer);
 		
 		// On ajoute au panel nord le panel inner
 		nord.add(inner);
 
-		// On créé un bouton supprimerEtageres
+		// On cree un bouton supprimerEtageres
 		JButton supprimerEtageres = new JButton("Supprimer l'étagère sélectionnée.");
 		
-		// On lui attribue un écouteur
+		// On lui attribue un ecouteur
 		supprimerEtageres.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ae) {
-				// On prépare la requête de suppression
+				// On prepare la requete de suppression
 				String requete = "DELETE FROM etagère WHERE positionEtagère='";
-				// On créé un tableau de String pour récupérer les champs pour l'ajout de la cave
+				// On cree un tableau de String pour recuperer les champs pour l'ajout de la cave
 				String [] t = new String[1];
 				t[0] = etagereASupprimer.getSelectedItem().toString();;
 				
-				// Si aucune étagère n'est sélectionnée, nous affichons un message d'erreur.
+				// Si aucune etagere n'est selectionnee, nous affichons un message d'erreur.
 				if(t[0].isEmpty()){
-					JOptionPane.showMessageDialog(null, "Veuillez sélectionner une étagère à supprimer.\n", "Erreur", JOptionPane.ERROR_MESSAGE);
+					JOptionPane.showMessageDialog(null, "Veuillez selectionner une etagere a supprimer.\n", "Erreur", JOptionPane.ERROR_MESSAGE);
 				}
 				// Sinon
 				else{
-					// On fini la préparation de la requête en ajoutant le paramètre nécessaire à la requête
+					// On fini la preparation de la requete en ajoutant le parametre necessaire a la requete
 					requete += t[0] + "'";
-					// Nous effectuons la requête à l'aide de la fonction MyConnexionInsertDeleteUpdate(String requete).
+					// Nous effectuons la requete a l'aide de la fonction MyConnexionInsertDeleteUpdate(String requete).
 					boolean status = bdd.MyConnexionInsertDeleteUpdate(requete);
-					// Si la requête à échouer, nous affichons un message d'erreur et nous remettons le champ de suppression de l'étagère à vide.
+					// Si la requete a echouer, nous affichons un message d'erreur et nous remettons le champ de suppression de l'etagere a vide.
 					if(!(status)){
-						JOptionPane.showMessageDialog(null, "L'étagère de la position " + t[0] + " n'a pas été supprimé dans la base de données", "Erreur", JOptionPane.ERROR_MESSAGE);
+						JOptionPane.showMessageDialog(null, "L'etagere de la position " + t[0] + " n'a pas ete supprime dans la base de donnees", "Erreur", JOptionPane.ERROR_MESSAGE);
 						etagereASupprimer.setSelectedItem("");
 					}
-					// Sinon on affiche un message de succès et nous remettons le champ de suppression de l'étagère à vide.
+					// Sinon on affiche un message de succes et nous remettons le champ de suppression de l'etagere a vide.
 					else
 					{
-						JOptionPane.showMessageDialog(null, "L'étagère de la position " + t[0] + " a pas été supprimé dans la base de données", "Information", JOptionPane.INFORMATION_MESSAGE);
+						JOptionPane.showMessageDialog(null, "L'etagere de la position " + t[0] + " a pas ete supprime dans la base de donnees", "Information", JOptionPane.INFORMATION_MESSAGE);
 						etagereASupprimer.setSelectedItem("");
 					}
 				}
-				// Mise à jour des listes etagereAModifier et etagereASupprimer
+				// Mise a jour des listes etagereAModifier et etagereASupprimer
 				MAJpanelEtageres(etagereAModifier);
 				MAJpanelEtageres(etagereASupprimer);
 				MAJpanelRangement(listeetagere, listebouteille, listevin);
@@ -1105,14 +1129,14 @@ public class FenetreAdmin extends JFrame{
 		panelSupprimerEtageres.add(nord, BorderLayout.CENTER);
 	}
 	
-	// Création du panel de Gestion des bouteilles
+	// Creation du panel de Gestion des bouteilles
 	public void createPanelBouteilles(){
-		// On créé le panel panelBouteilles qui contiendra tous les éléments de l'onglet GestionBouteille de la FenetreAdmin
+		// On cree le panel panelBouteilles qui contiendra tous les elements de l'onglet GestionBouteille de la FenetreAdmin
 		panelBouteilles = new JPanel();
-		// On lui dit que l'affichage des champs se par région
+		// On lui dit que l'affichage des champs se par region
 		panelBouteilles.setLayout(new BorderLayout());
 
-		// On créé les onglets de tabbedPaneModifBouteilles
+		// On cree les onglets de tabbedPaneModifBouteilles
 		createPanelAjoutBouteilles();
 		createPanelModifBouteilles();
 		createPanelSupprimerBouteilles();
@@ -1127,19 +1151,19 @@ public class FenetreAdmin extends JFrame{
 		panelBouteilles.add(tabbedPaneModifBouteilles, BorderLayout.CENTER);	
 	}
 	
-	// Création du panel d'Ajout de bouteilles
+	// Creation du panel d'Ajout de bouteilles
 	public void createPanelAjoutBouteilles(){
-		// On créé le panel panelAjoutBouteilles qui contiendra tous les éléments de l'onglet AjoutBouteilles de la FenetreAdmin
+		// On cree le panel panelAjoutBouteilles qui contiendra tous les elements de l'onglet AjoutBouteilles de la FenetreAdmin
 		panelAjoutBouteilles = new JPanel();
-		// On lui dit que l'affichage des champs se par région
+		// On lui dit que l'affichage des champs se par region
 		panelAjoutBouteilles.setLayout(new BorderLayout());
 	
-		// On créé le panel nord qui le panel innerNord et le bouton addBouteille
+		// On cree le panel nord qui le panel innerNord et le bouton addBouteille
 		JPanel nord = new JPanel();
-		// On lui dit que l'affichage des champs se par région
+		// On lui dit que l'affichage des champs se par region
 		nord.setLayout(new GridLayout(2,1));
 		
-		// On créé le panel inner qui contiendra les champs pour ajouter une bouteille
+		// On cree le panel inner qui contiendra les champs pour ajouter une bouteille
 		JPanel innerNord = new JPanel();
 		// On lui dit que l'affichage des champs se fera sous forme de grille avec 3 ligne et 3 colonnes
 		innerNord.setLayout(new GridLayout(1,2));
@@ -1150,42 +1174,42 @@ public class FenetreAdmin extends JFrame{
 		innerNord.add(capacity);
 		nord.add(innerNord);
 		
-		// On créé un bouton addBouteille
+		// On cree un bouton addBouteille
 		JButton addBouteille = new JButton("Ajouter une bouteille");
 		
-		// On lui attribut un écouteur
+		// On lui attribut un ecouteur
 		addBouteille.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ae) {
-				// On prépare la requête d'ajout
+				// On prepare la requete d'ajout
 				String requete = "INSERT INTO bouteille(taille) VALUES (";
-				// On créé un tableau de String pour récupérer les champs pour l'ajout de la cave
+				// On cree un tableau de String pour recuperer les champs pour l'ajout de la cave
 				String [] t = new String[1];
 				t[0] = capacity.getText();
 				
 				
 				
-				// Si l'utilisateur n'a pas donné de volume pour la bouteille, nous lui affichons un message d'erreur et nous mettons le champ à vide.
+				// Si l'utilisateur n'a pas donne de volume pour la bouteille, nous lui affichons un message d'erreur et nous mettons le champ a vide.
 				if(t[0].isEmpty()){
-					JOptionPane.showMessageDialog(null, "Veuillez renseigner tous les champs demandés.\n", "Erreur", JOptionPane.ERROR_MESSAGE);
+					JOptionPane.showMessageDialog(null, "Veuillez renseigner tous les champs demandes.\n", "Erreur", JOptionPane.ERROR_MESSAGE);
 					capacity.setText("");
 				}
 				else{
-					// On fini la préparation de la requête en ajoutant les paramètres nécessaires à la requête
+					// On fini la preparation de la requete en ajoutant les parametres necessaires a la requete
 					requete += t[0] + ")";
-					// Nous effectuons la requête à l'aide de la fonction MyConnexionInsertDeleteUpdate(String requete).
+					// Nous effectuons la requete a l'aide de la fonction MyConnexionInsertDeleteUpdate(String requete).
 					boolean statut = bdd.MyConnexionInsertDeleteUpdate(requete);
-					// Si la requête à échouer, nous affichons un message d'erreur et nous remettons le champ à vide.
+					// Si la requete a echouer, nous affichons un message d'erreur et nous remettons le champ a vide.
 					if(!(statut)){
-						JOptionPane.showMessageDialog(null, "Une bouteille de " + t[0] + " litres n'a pas été ajoutée dans la base de données.\n", "Erreur", JOptionPane.ERROR_MESSAGE);
+						JOptionPane.showMessageDialog(null, "Une bouteille de " + t[0] + " litres n'a pas ete ajoutee dans la base de donnees.\n", "Erreur", JOptionPane.ERROR_MESSAGE);
 						capacity.setText("");
 					}
-					// Sinon on affiche un message de succès et nous remettons le champ à vide.
+					// Sinon on affiche un message de succes et nous remettons le champ a vide.
 					else
 					{
-						JOptionPane.showMessageDialog(null, "Une bouteille de " + t[0] + " litre a été ajoutée dans la base de données.\n", "Information", JOptionPane.INFORMATION_MESSAGE);
+						JOptionPane.showMessageDialog(null, "Une bouteille de " + t[0] + " litre a ete ajoutee dans la base de donnees.\n", "Information", JOptionPane.INFORMATION_MESSAGE);
 						capacity.setText("");
 					}
-					// On met à jour les listes bouteilleAModifier et bouteilleASupprimer
+					// On met a jour les listes bouteilleAModifier et bouteilleASupprimer
 					MAJpanelBouteilles(bouteilleAModifier);
 					MAJpanelBouteilles(bouteilleASupprimer);
 					MAJpanelRangement(listeetagere, listebouteille, listevin);
@@ -1201,90 +1225,90 @@ public class FenetreAdmin extends JFrame{
 		
 	}
 	
-	// Création du panel de modification de bouteille
+	// Creation du panel de modification de bouteille
 	public void createPanelModifBouteilles(){
-		// On créé le panel panelModifBouteilles qui contiendra tous les éléments de l'onglet ModifBouteilles de la FenetreAdmin
+		// On cree le panel panelModifBouteilles qui contiendra tous les elements de l'onglet ModifBouteilles de la FenetreAdmin
 		panelModifBouteilles = new JPanel();
-		// On lui dit que l'affichage des champs se par région
+		// On lui dit que l'affichage des champs se par region
 		panelModifBouteilles.setLayout(new BorderLayout());
 
-		// On créé le panel nord qui le panel inner et le bouton modifierBouteille
+		// On cree le panel nord qui le panel inner et le bouton modifierBouteille
 		JPanel nord = new JPanel();
-		// On lui dit que l'affichage des champs se par région
+		// On lui dit que l'affichage des champs se par region
 		nord.setLayout(new BorderLayout());
 		
-		// On créé le panel inner qui contiendra les champs pour modifier une bouteille
+		// On cree le panel inner qui contiendra les champs pour modifier une bouteille
 		JPanel inner = new JPanel();
 		// On lui dit que l'affichage des champs se fera sous forme de grille avec 1 ligne et 0 colonnes
 		inner.setLayout(new GridLayout(1,0));
 		
-		// On créé la liste des bouteilles.
+		// On cree la liste des bouteilles.
 		creerListeBouteille(bouteilleAModifier);
 		
-		// On ajoute le champ capacité au panel inner
-		inner.add(new JLabel("Choisir la capacité à modifier (en Litre): \n"));
+		// On ajoute le champ capacite au panel inner
+		inner.add(new JLabel("Choisir la bouteille : \n"));
 		inner.add(bouteilleAModifier);
 		
-		// On ajoute le panel inner au panel nord à la position nord
+		// On ajoute le panel inner au panel nord a la position nord
 		nord.add(inner, BorderLayout.NORTH);
 		
 		
-		// On créé le panel bottomEtageres qui contiendra les champs à remplir avant de modifier une étagère
+		// On cree le panel bottomEtageres qui contiendra les champs a remplir avant de modifier une etagere
 		final JPanel bottomBouteilles = new JPanel();
 		// On lui dit que l'affichage des champs se fera sous forme de grille avec 5 ligne et 2 colonnes
 		bottomBouteilles.setLayout(new GridLayout(3,2));
 		
-		// On créé les JTextField pour ajouter les données de la bouteille à modifier dedans.
+		// On cree les JTextField pour ajouter les donnees de la bouteille a modifier dedans.
 		final JTextField idBouteille = new JTextField();
 		final JTextField capacityBottle = new JTextField();
 		
 		// On ajoute au panel bottomBouteilles le champ identifiant Bouteille
 		bottomBouteilles.add(new JLabel("Id Bouteille : "));
 		bottomBouteilles.add(idBouteille);
-		// On rend ce champ nom éditable
+		// On rend ce champ nom editable
 		idBouteille.setEditable(false);
 		
-		// On ajoute au panel bottomBouteilles le champ capacité
-		bottomBouteilles.add(new JLabel("Capacité en Litre(s) : "));
+		// On ajoute au panel bottomBouteilles le champ capacite
+		bottomBouteilles.add(new JLabel("Capacite en Litre(s) : "));
 		bottomBouteilles.add(capacityBottle);
 		
 		// On cache le panel bottomBouteilles
 		bottomBouteilles.setVisible(false);
 
-		// On créé un bouton modifierBouteille
-		JButton modifierBouteilles = new JButton("Modifier la bouteille sélectionnée");
+		// On cree un bouton modifierBouteille
+		JButton modifierBouteilles = new JButton("Modifier la bouteille selectionnee");
 		
-		// On lui attribue un écouteur
+		// On lui attribue un ecouteur
 		modifierBouteilles.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ae) {
-				// On prépare la requête de selection
+				// On prepare la requete de selection
 				String requete = "SELECT * FROM bouteille WHERE taille=";
-				// On créé un tableau de String pour récupérer le champ pour la modification de l'étagère
+				// On cree un tableau de String pour recuperer le champ pour la modification de l'etagere
 				String [] t = new String[1];
 				t[0] = bouteilleAModifier.getSelectedItem().toString();;
-				// FLOTTANT marche seulement avec 1 chiffre après la virgule.
+				// FLOTTANT marche seulement avec 1 chiffre apres la virgule.
 				
 				// Si l'argument est vide, nous affichons un message d'erreur.
 				if(t[0].isEmpty()){
-					JOptionPane.showMessageDialog(null, "Veuillez sélectionner une bouteille à modifier.\n", "Erreur", JOptionPane.ERROR_MESSAGE);
+					JOptionPane.showMessageDialog(null, "Veuillez selectionner une bouteille a modifier.\n", "Erreur", JOptionPane.ERROR_MESSAGE);
 				}
 				//Sinon
 				else{
-					// On fini la préparation de la requête en ajoutant le paramètre nécessaire à la requête
+					// On fini la preparation de la requete en ajoutant le parametre necessaire a la requete
 					requete += t[0];
-					// On récupère le resultat de la requête à l'aide de MyConnexionSelect(String requête)
+					// On recupere le resultat de la requete a l'aide de MyConnexionSelect(String requete)
 					ResultSet statut = bdd.MyConnexionSelect(requete);
-					// Bloc try catch pour la gestion des excetions dû à  la requête.					
+					// Bloc try catch pour la gestion des excetions du a  la requete.					
 						try {
-							// Si la requête a renvoyé des données, nous mettons ces données dans les champs de modification de la bouteille 
+							// Si la requete a renvoye des donnees, nous mettons ces donnees dans les champs de modification de la bouteille 
 							if(statut.first()){
 								idBouteille.setText(statut.getString("identifiantBouteille"));
 								capacityBottle.setText(statut.getString("taille"));
 							}
-							// Sinon, nous affichons un message d'erreur et nous mettons l'etagereAModifier à vide.
+							// Sinon, nous affichons un message d'erreur et nous mettons l'etagereAModifier a vide.
 							else
 							{
-								JOptionPane.showMessageDialog(null, "Une bouteille de " + t[0] + " litre n'a pas été sélectionnée dans la base de données.\n", "Erreur", JOptionPane.ERROR_MESSAGE);
+								JOptionPane.showMessageDialog(null, "Une bouteille de " + t[0] + " litre n'a pas ete selectionnee dans la base de donnees.\n", "Erreur", JOptionPane.ERROR_MESSAGE);
 								bouteilleAModifier.setSelectedItem("");
 							}
 						} catch (HeadlessException | SQLException e) {
@@ -1298,15 +1322,15 @@ public class FenetreAdmin extends JFrame{
 		// On ajoute au panel nord le bouton modifierBouteilles au sud.
 		nord.add(modifierBouteilles, BorderLayout.SOUTH);
 		
-		// On créé un bouton updateDataBottle
-		JButton updateDataBottle = new JButton("Valider les données\n");
+		// On cree un bouton updateDataBottle
+		JButton updateDataBottle = new JButton("Valider les donnees\n");
 		
-		// On lui attribue un écouteur
+		// On lui attribue un ecouteur
 		updateDataBottle.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ae) {
-				// On prépare la requête d'update
+				// On prepare la requete d'update
 				String requete = "UPDATE bouteille SET ";
-				// On créé un tableau de String pour récupérer le champ pour la modification de l'étagère
+				// On cree un tableau de String pour recuperer le champ pour la modification de l'etagere
 				String [] t = new String[2];
 				t[0] = idBouteille.getText();
 				t[1] = capacityBottle.getText();
@@ -1318,23 +1342,23 @@ public class FenetreAdmin extends JFrame{
 				// Sinon
 				else
 				{
-					// On fini la préparation de la requête en ajoutant les paramètres nécessaires à la requête
+					// On fini la preparation de la requete en ajoutant les parametres necessaires a la requete
 					requete += "taille=\'"+ t[1] + "\'";
 					requete += " WHERE identifiantBouteille=" + t[0];
-					// Nous effectuons la requête à l'aide de la fonction MyConnexionInsertDeleteUpdate(String requete).
+					// Nous effectuons la requete a l'aide de la fonction MyConnexionInsertDeleteUpdate(String requete).
 					boolean statut = bdd.MyConnexionInsertDeleteUpdate(requete);
-					// Si la requête à réussi, nous affichons un message pour dire que la bouteille a été modifié.
+					// Si la requete a reussi, nous affichons un message pour dire que la bouteille a ete modifie.
 					// Et nous recachons le panel bottomBouteilles.
 					if(statut){
-						JOptionPane.showMessageDialog(null, "La bouteille d'identifiant " + t[0] + " a été modifié dans la base de données.\n", "Information", JOptionPane.INFORMATION_MESSAGE);
+						JOptionPane.showMessageDialog(null, "La bouteille d'identifiant " + t[0] + " a ete modifie dans la base de donnees.\n", "Information", JOptionPane.INFORMATION_MESSAGE);
 						bottomBouteilles.setVisible(false);
 					}
 					// Sinon, nous affichons un message d'erreur
 					else
 					{
-						JOptionPane.showMessageDialog(null, "La bouteille d'identifiant " + t[0] + " n'a pas été modifié dans la base de données.\n", "Erreur", JOptionPane.ERROR_MESSAGE);
+						JOptionPane.showMessageDialog(null, "La bouteille d'identifiant " + t[0] + " n'a pas ete modifie dans la base de donnees.\n", "Erreur", JOptionPane.ERROR_MESSAGE);
 					}
-					// On effectue une mise à jour des listes bouteilleAModifier et bouteilleASupprimer
+					// On effectue une mise a jour des listes bouteilleAModifier et bouteilleASupprimer
 					MAJpanelBouteilles(bouteilleAModifier);
 					MAJpanelBouteilles(bouteilleASupprimer);
 					MAJpanelRangement(listeetagere, listebouteille, listevin);
@@ -1345,102 +1369,102 @@ public class FenetreAdmin extends JFrame{
 		// On ajoute au panel bottomBouteilles le bouton updateDataBottle
 		bottomBouteilles.add(updateDataBottle);
 	
-		// On ajoute au panelModifBouteilles le panel nord à la position nord et le panel bottomBouteilles à la position sud.
+		// On ajoute au panelModifBouteilles le panel nord a la position nord et le panel bottomBouteilles a la position sud.
 		panelModifBouteilles.add(nord, BorderLayout.NORTH);
 		panelModifBouteilles.add(bottomBouteilles, BorderLayout.SOUTH);
 		
 	}
 
-	// Création du panel de suppression de bouteille
+	// Creation du panel de suppression de bouteille
 	public void createPanelSupprimerBouteilles(){
-		// On créé le panel panelSupprimerBouteilles qui contiendra tous les éléments de l'onglet SupprimerBouteilles de la FenetreAdmin
+		// On cree le panel panelSupprimerBouteilles qui contiendra tous les elements de l'onglet SupprimerBouteilles de la FenetreAdmin
 		panelSupprimerBouteilles = new JPanel();
-		// On lui dit que l'affichage des champs se par région
+		// On lui dit que l'affichage des champs se par region
 		panelSupprimerBouteilles.setLayout(new BorderLayout());
 
-		// On créé le panel nord qui le panel inner et le bouton supprimerBouteille
+		// On cree le panel nord qui le panel inner et le bouton supprimerBouteille
 		JPanel nord = new JPanel();
 		// On lui dit que l'affichage des champs se fera sous forme de grille avec 2 lignes et 0 colonne
 		nord.setLayout(new GridLayout(2,0));
 		
-		// On créé le panel inner qui contiendra les champs pour supprimer une bouteille
+		// On cree le panel inner qui contiendra les champs pour supprimer une bouteille
 		JPanel inner = new JPanel();
 		// On lui dit que l'affichage des champs se fera sous forme de grille avec 1 ligne et 2 colonnes
 		inner.setLayout(new GridLayout(1,2));
 		
-		// On créé la liste des bouteilles à supprimer
+		// On cree la liste des bouteilles a supprimer
 		creerListeBouteille(bouteilleASupprimer);
 		
-		// On ajoute au panel inner la liste des bouteilles à supprimer
-		inner.add(new JLabel("Bouteille(s) à supprimer:"));
+		// On ajoute au panel inner la liste des bouteilles a supprimer
+		inner.add(new JLabel("Bouteille(s) a supprimer:"));
 		inner.add(bouteilleASupprimer);
 		
 		// On ajoute au panel nord le panel inner
 		nord.add(inner);
 		
-		// On créé un bouton supprimerBouteilles
-		JButton supprimerBouteilles = new JButton("Supprimer la bouteille sélectionnée.");
+		// On cree un bouton supprimerBouteilles
+		JButton supprimerBouteilles = new JButton("Supprimer la bouteille selectionnee.");
 		
-		// On lui attribue un écouteur
+		// On lui attribue un ecouteur
 		supprimerBouteilles.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ae) {
-				// On prépare la requête de suppression
+				// On prepare la requete de suppression
 				String requete = "DELETE FROM bouteille WHERE taille=\'";
-				// On prépare la requête pour la selection
+				// On prepare la requete pour la selection
 				String requeteSelect = "SELECT * FROM bouteille WHERE taille=\'";
 				String idBottle = null;
-				// On créé un tableau de String pour récupérer les champs pour l'ajout de la cave
+				// On cree un tableau de String pour recuperer les champs pour l'ajout de la cave
 				String [] t = new String[1];
 				t[0] = bouteilleASupprimer.getSelectedItem().toString();;
 				
-				// Si aucune bouteille n'est sélectionnée, nous affichons un message d'erreur.
+				// Si aucune bouteille n'est selectionnee, nous affichons un message d'erreur.
 				if(t[0].isEmpty()){
-					JOptionPane.showMessageDialog(null, "Veuillez sélectionner une bouteille à supprimer.\n", "Erreur", JOptionPane.ERROR_MESSAGE);
+					JOptionPane.showMessageDialog(null, "Veuillez selectionner une bouteille a supprimer.\n", "Erreur", JOptionPane.ERROR_MESSAGE);
 				}
 				// Sinon
 				else{
-					// On fini la préparation de la requête de suppression en ajoutant le paramètre nécessaire à la requête
+					// On fini la preparation de la requete de suppression en ajoutant le parametre necessaire a la requete
 					requete += t[0] + "\'";
-					// On fini la préparation de la requête de sélection en ajoutant le paramètre nécessaire à la requête
+					// On fini la preparation de la requete de selection en ajoutant le parametre necessaire a la requete
 					requeteSelect += t[0] + "\'";
-					// On récupère le resultat de la requête à l'aide de MyConnexionSelect(String requête)
+					// On recupere le resultat de la requete a l'aide de MyConnexionSelect(String requete)
 					ResultSet statut = bdd.MyConnexionSelect(requeteSelect);
-					// Bloc try catch pour la gestion des excetions dû à  la requête.					
+					// Bloc try catch pour la gestion des excetions du a  la requete.					
 						try {
-							// Si la requête a renvoyé des données, nous récupérons l'identifiant de la bouteille à supprimer
+							// Si la requete a renvoye des donnees, nous recuperons l'identifiant de la bouteille a supprimer
 							if(statut.first()){
 								idBottle = statut.getString("identifiantBouteille");
 							}
-							// Sinon, nous affichons un message d'erreur et nous mettons la bouteille à supprimer à vide.
+							// Sinon, nous affichons un message d'erreur et nous mettons la bouteille a supprimer a vide.
 							else
 							{
-								JOptionPane.showMessageDialog(null, "Une bouteille de " + t[0] + " litre n'a pas été supprimé dans la base de données", "Erreur", JOptionPane.ERROR_MESSAGE);
+								JOptionPane.showMessageDialog(null, "Une bouteille de " + t[0] + " litre n'a pas ete supprime dans la base de donnees", "Erreur", JOptionPane.ERROR_MESSAGE);
 								bouteilleASupprimer.setSelectedItem("");
 							}
 						} catch (HeadlessException | SQLException e) {
 							e.printStackTrace();
 						}
-						// Si nous avons changer la valeur de l'idBottle (nous avons sélectionné la bouteille dans la base)
+						// Si nous avons changer la valeur de l'idBottle (nous avons selectionne la bouteille dans la base)
 						if(idBottle != null)
 						{
-							// On fini la préparation de la requête de suppression en ajoutant le paramètre nécessaire à la requête
+							// On fini la preparation de la requete de suppression en ajoutant le parametre necessaire a la requete
 							requete += " AND identifiantBouteille=" + idBottle;
-							// Nous effectuons la requête à l'aide de la fonction MyConnexionInsertDeleteUpdate(String requete).
+							// Nous effectuons la requete a l'aide de la fonction MyConnexionInsertDeleteUpdate(String requete).
 							boolean status = bdd.MyConnexionInsertDeleteUpdate(requete);
-							// Si la requête à réussi, nous affichons un message pour dire que la bouteille a été supprimé.
-							// Et nous remettons le champ de suppression de la bouteille à vide.
+							// Si la requete a reussi, nous affichons un message pour dire que la bouteille a ete supprime.
+							// Et nous remettons le champ de suppression de la bouteille a vide.
 							if((status)){
-								JOptionPane.showMessageDialog(null, "Une bouteille de " + t[0] + " litre a pas été supprimé dans la base de données", "Information", JOptionPane.INFORMATION_MESSAGE);
+								JOptionPane.showMessageDialog(null, "Une bouteille de " + t[0] + " litre a pas ete supprime dans la base de donnees", "Information", JOptionPane.INFORMATION_MESSAGE);
 								bouteilleASupprimer.setSelectedItem("");
 							}
-							// Sinon on affiche un message d'erreur et nous remettons le champ de suppression de la bouteille à vide.
+							// Sinon on affiche un message d'erreur et nous remettons le champ de suppression de la bouteille a vide.
 							else
 							{
-								JOptionPane.showMessageDialog(null, "La bouteille de " + t[0] + " litre n'a pas été supprimé dans la base de données", "Erreur", JOptionPane.ERROR_MESSAGE);
+								JOptionPane.showMessageDialog(null, "La bouteille de " + t[0] + " litre n'a pas ete supprime dans la base de donnees", "Erreur", JOptionPane.ERROR_MESSAGE);
 								bouteilleASupprimer.setSelectedItem("");
 							}
 						}
-						// On met à jour les listes bouteilleAModifier et bouteilleASupprimer
+						// On met a jour les listes bouteilleAModifier et bouteilleASupprimer
 						MAJpanelBouteilles(bouteilleAModifier);
 						MAJpanelBouteilles(bouteilleASupprimer);
 						MAJpanelRangement(listeetagere, listebouteille, listevin);
@@ -1455,14 +1479,14 @@ public class FenetreAdmin extends JFrame{
 		panelSupprimerBouteilles.add(nord, BorderLayout.CENTER);
 	}
 
-	// Création du panel de Gestion des vins
+	// Creation du panel de Gestion des vins
 	public void createPanelVins(){
-		// On créé le panel panelVins qui contiendra tous les éléments de l'onglet GestionVin de la FenetreAdmin
+		// On cree le panel panelVins qui contiendra tous les elements de l'onglet GestionVin de la FenetreAdmin
 		panelVins = new JPanel();
-		// On lui dit que l'affichage des champs se par région
+		// On lui dit que l'affichage des champs se par region
 		panelVins.setLayout(new BorderLayout());
 
-		// On créé les onglets de tabbedPaneModifBouteilles
+		// On cree les onglets de tabbedPaneModifBouteilles
 		createPanelAjoutVins();
 		createPanelModifVins();
 		createPanelSupprimerVins();
@@ -1477,19 +1501,19 @@ public class FenetreAdmin extends JFrame{
 		panelVins.add(tabbedPaneModifVins, BorderLayout.CENTER);	
 	}
 
-	// Création du panel d'Ajout de vins
+	// Creation du panel d'Ajout de vins
 	public void createPanelAjoutVins(){
-		// On créé le panel panelAjoutVins qui contiendra tous les éléments de l'onglet AjoutVins de la FenetreAdmin
+		// On cree le panel panelAjoutVins qui contiendra tous les elements de l'onglet AjoutVins de la FenetreAdmin
 		panelAjoutVins = new JPanel();
-		// On lui dit que l'affichage des champs se par région
+		// On lui dit que l'affichage des champs se par region
 		panelAjoutVins.setLayout(new BorderLayout());
 	
-		// On créé le panel nord qui le panel innerNord et le bouton addBouteille
+		// On cree le panel nord qui le panel innerNord et le bouton addBouteille
 		JPanel nord = new JPanel();
-		// On lui dit que l'affichage des champs se par région
+		// On lui dit que l'affichage des champs se par region
 		nord.setLayout(new BorderLayout());
 		
-		// On créé le panel inner qui contiendra les champs pour ajouter une bouteille
+		// On cree le panel inner qui contiendra les champs pour ajouter une bouteille
 		JPanel inner = new JPanel();
 		// On lui dit que l'affichage des champs se fera sous forme de grille avec 6 ligne et 2 colonnes
 		inner.setLayout(new GridLayout(6,2));
@@ -1503,59 +1527,59 @@ public class FenetreAdmin extends JFrame{
 		dateVins = new JTextField();
 
 		
-		// On met la taille du JTextField à 200px de long et 30 px de hauteur
+		// On met la taille du JTextField a 200px de long et 30 px de hauteur
 		regionVins.setPreferredSize(new Dimension(200,30));
 		// On ajoute le champ Region du vin dans le panel inner
 		inner.add(new JLabel("Region du vin :"));
 		inner.add(regionVins);
 				
-		// On met la taille du JTextField à 200px de long et 30 px de hauteur
+		// On met la taille du JTextField a 200px de long et 30 px de hauteur
 		domaineVins.setPreferredSize(new Dimension(200,100));
 		// On ajoute le champ Domaine du vin dans le panel inner
 		inner.add(new JLabel("Domaine du vin :"));
 		inner.add(domaineVins);
 		
-		// On met la taille du JTextField à 200px de long et 30 px de hauteur
+		// On met la taille du JTextField a 200px de long et 30 px de hauteur
 		châteauVins.setPreferredSize(new Dimension(200,30));
-		// On ajoute le champ Château du vin dans le panel inner
-		inner.add(new JLabel("Château du vin :"));
+		// On ajoute le champ Chateau du vin dans le panel inner
+		inner.add(new JLabel("Chateau du vin :"));
 		inner.add(châteauVins);
 		
-		// On met la taille du JComboBox à 200px de long et 30 px de hauteur
+		// On met la taille du JComboBox a 200px de long et 30 px de hauteur
 		couleurVins.setPreferredSize(new Dimension(200,30));
 		// On rajoute les couleurs de vins dans la JComboBox<String>
 		couleurVins.addItem("");
 		couleurVins.addItem("rouge");
 		couleurVins.addItem("blanc");
-		couleurVins.addItem("rosé");
+		couleurVins.addItem("rose");
 		// On ajoute le champ Couleur du vin dans le panel inner
 		inner.add(new JLabel("Couleur du vin :"));
 		inner.add(couleurVins);
 				
-		// On met la taille du JTextField à 200px de long et 30 px de hauteur
+		// On met la taille du JTextField a 200px de long et 30 px de hauteur
 		cepageVins.setPreferredSize(new Dimension(200,100));
-		// On ajoute le champ Cépage du vin dans le panel inner
-		inner.add(new JLabel("Cépage du vin :"));
+		// On ajoute le champ Cepage du vin dans le panel inner
+		inner.add(new JLabel("Cepage du vin :"));
 		inner.add(cepageVins);
 		
-		// On met la taille du JTextField à 200px de long et 30 px de hauteur
+		// On met la taille du JTextField a 200px de long et 30 px de hauteur
 		dateVins.setPreferredSize(new Dimension(200,100));
-		// On ajoute le champ Année du vin dans le panel inner
-		inner.add(new JLabel("Année du vin :"));
+		// On ajoute le champ Annee du vin dans le panel inner
+		inner.add(new JLabel("Annee du vin :"));
 		inner.add(dateVins);
 				
 		// On ajoute au panel nord le panel inner au nord
 		nord.add(inner, BorderLayout.NORTH);
 		
-		// On créé un bouton ajouterVins
+		// On cree un bouton ajouterVins
 		JButton ajouterVins = new JButton("Ajouter le vins");
 		
-		// On lui attribut un écouteur
+		// On lui attribut un ecouteur
 		ajouterVins.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ae) {
-				// On prépare la requête d'ajout
+				// On prepare la requete d'ajout
 				String requete = "INSERT INTO vins(domaineVin, regionVin, châteauVin, couleur, cepageVin,dateVin) VALUES (";
-				// On créé un tableau de String pour récupérer les champs pour l'ajout de la cave
+				// On cree un tableau de String pour recuperer les champs pour l'ajout de la cave
 				String [] t = new String[6];
 				t[0] = domaineVins.getText();
 				t[1] = regionVins.getText();
@@ -1564,9 +1588,9 @@ public class FenetreAdmin extends JFrame{
 				t[4] = cepageVins.getText();
 				t[5] = dateVins.getText();
 				
-				// Si un ou plusieurs arguments n'ont pas été renseignés, nous lui affichons un message d'erreur et nous mettons les champs à vide.
+				// Si un ou plusieurs arguments n'ont pas ete renseignes, nous lui affichons un message d'erreur et nous mettons les champs a vide.
 				if(t[0].isEmpty() || t[1].isEmpty() || t[2].isEmpty() || t[3].isEmpty() || t[4].isEmpty() || t[5].isEmpty()){
-					JOptionPane.showMessageDialog(null, "Veuillez renseigner tous les champs demandés.\n", "Erreur", JOptionPane.ERROR_MESSAGE);
+					JOptionPane.showMessageDialog(null, "Veuillez renseigner tous les champs demandes.\n", "Erreur", JOptionPane.ERROR_MESSAGE);
 					domaineVins.setText("");
 					regionVins.setText("");
 					châteauVins.setText("");
@@ -1575,21 +1599,21 @@ public class FenetreAdmin extends JFrame{
 					dateVins.setText("");
 				}
 				else{
-					// Si la date possède plus de 4 caractères, nous affichons un message d'erreur et nous mettons le champ date à vide.
+					// Si la date possede plus de 4 caracteres, nous affichons un message d'erreur et nous mettons le champ date a vide.
 					if(t[5].length() != 4){
-						JOptionPane.showMessageDialog(null, "Veuillez renseigner une date cohérante.\n", "Erreur", JOptionPane.ERROR_MESSAGE);
+						JOptionPane.showMessageDialog(null, "Veuillez renseigner une date coherante.\n", "Erreur", JOptionPane.ERROR_MESSAGE);
 						dateVins.setText("");
 					}
 					else
 					{
 					
-						// On fini la préparation de la requête en ajoutant les paramètres nécessaires à la requête
+						// On fini la preparation de la requete en ajoutant les parametres necessaires a la requete
 						requete += "'" + t[0] + "','"+ t[1] + "','" + t[2] + "','" + t[3] + "','" + t[4] + "'," + t[5] + ")";
-						// Nous effectuons la requête à l'aide de la fonction MyConnexionInsertDeleteUpdate(String requete).
+						// Nous effectuons la requete a l'aide de la fonction MyConnexionInsertDeleteUpdate(String requete).
 						boolean statut = bdd.MyConnexionInsertDeleteUpdate(requete);
-						// Si la requête à échouer, nous affichons un message d'erreur et nous remettons le champ à vide.
+						// Si la requete a echouer, nous affichons un message d'erreur et nous remettons le champ a vide.
 						if(!(statut)){
-							JOptionPane.showMessageDialog(null, "Le vin " + t[4] + " n'a pas été ajoutée dans la base de données.\n", "Erreur", JOptionPane.ERROR_MESSAGE);
+							JOptionPane.showMessageDialog(null, "Le vin " + t[4] + " n'a pas ete ajoutee dans la base de donnees.\n", "Erreur", JOptionPane.ERROR_MESSAGE);
 							domaineVins.setText("");
 							regionVins.setText("");
 							châteauVins.setText("");
@@ -1597,10 +1621,10 @@ public class FenetreAdmin extends JFrame{
 							cepageVins.setText("");
 							dateVins.setText("");
 						}
-						// Sinon on affiche un message de succès et nous remettons le champ à vide.
+						// Sinon on affiche un message de succes et nous remettons le champ a vide.
 						else
 						{
-							JOptionPane.showMessageDialog(null, "Le vin " + t[4] + " a été ajoutée dans la base de données.\n", "Information", JOptionPane.INFORMATION_MESSAGE);
+							JOptionPane.showMessageDialog(null, "Le vin " + t[4] + " a ete ajoutee dans la base de donnees.\n", "Information", JOptionPane.INFORMATION_MESSAGE);
 							domaineVins.setText("");
 							regionVins.setText("");
 							châteauVins.setText("");
@@ -1609,7 +1633,7 @@ public class FenetreAdmin extends JFrame{
 							dateVins.setText("");
 						}
 					}
-					// On met à jour les listes vinAModifier et vinASupprimer
+					// On met a jour les listes vinAModifier et vinASupprimer
 					MAJpanelVins(vinAModifier);
 					MAJpanelVins(vinASupprimer);
 					MAJpanelRangement(listeetagere, listebouteille, listevin);
@@ -1626,47 +1650,47 @@ public class FenetreAdmin extends JFrame{
 	}
 	
 	
-	// Création du panel de modification de vins
+	// Creation du panel de modification de vins
 	public void createPanelModifVins(){
-		// On créé le panel panelModifVins qui contiendra tous les éléments de l'onglet ModifVins de la FenetreAdmin
+		// On cree le panel panelModifVins qui contiendra tous les elements de l'onglet ModifVins de la FenetreAdmin
 		panelModifVins = new JPanel();
-		// On lui dit que l'affichage des champs se par région
+		// On lui dit que l'affichage des champs se par region
 		panelModifVins.setLayout(new BorderLayout());
 	
-		// On créé le panel nord qui le panel inner et le bouton modifierVins
+		// On cree le panel nord qui le panel inner et le bouton modifierVins
 		JPanel nord = new JPanel();
-		// On lui dit que l'affichage des champs se par région
+		// On lui dit que l'affichage des champs se par region
 		nord.setLayout(new BorderLayout());
 		
-		// On créé le panel inner qui contiendra les champs pour ajouter une bouteille
+		// On cree le panel inner qui contiendra les champs pour ajouter une bouteille
 		JPanel inner = new JPanel();
 		// On lui dit que l'affichage des champs se fera sous forme de grille avec 6 ligne et 2 colonnes
 		inner.setLayout(new GridLayout(1,0));
 
 
-		// On creer la liste de vin à modifier
+		// On creer la liste de vin a modifier
 		creerListeVin(vinAModifier);
 		
 		// On ajoute le champs vinAModifier dans le panel inner
-		inner.add(new JLabel("Choisir le vin à modifier.\n"));
+		inner.add(new JLabel("Choisir le vin a modifier.\n"));
 		inner.add(vinAModifier);
 		
-		// On ajoute le panel inner dans le panel nord à la position nord
+		// On ajoute le panel inner dans le panel nord a la position nord
 		nord.add(inner, BorderLayout.NORTH);
 		
-		// On créé le panel bottomEtageres qui contiendra les champs à remplir avant de modifier une étagère
+		// On cree le panel bottomEtageres qui contiendra les champs a remplir avant de modifier une etagere
 		final JPanel bottomVins = new JPanel();
 		// On lui dit que l'affichage des champs se fera sous forme de grille avec 5 ligne et 2 colonnes
 		bottomVins.setLayout(new GridLayout(7,2));
 				
-		// On créé les JTextField pour ajouter les données de la bouteille à modifier dedans.
+		// On cree les JTextField pour ajouter les donnees de la bouteille a modifier dedans.
 		final JTextField regionVinsM = new JTextField();
 		final JTextField domaineVinsM = new JTextField();
 		final JTextField châteauVinsM = new JTextField();
 		final JTextField cepageVinsM = new JTextField();
 		final JTextField dateVinsM = new JTextField();
 		
-		// On créé la JComboBox<String> pour la couleur du vin
+		// On cree la JComboBox<String> pour la couleur du vin
 		final JComboBox<String> couleurVinsM = new JComboBox<String>();
 		couleurVinsM.addItem("blanc");
 		couleurVinsM.addItem("rose");
@@ -1680,50 +1704,50 @@ public class FenetreAdmin extends JFrame{
 		bottomVins.add(new JLabel("Domaine : "));
 		bottomVins.add(domaineVinsM);
 		
-		// On ajoute le champs Château au panel bottomVins
-		bottomVins.add(new JLabel("Château : "));
+		// On ajoute le champs Chateau au panel bottomVins
+		bottomVins.add(new JLabel("Chateau : "));
 		bottomVins.add(châteauVinsM);
 		
 		// On ajoute le champs Couleur au panel bottomVins
 		bottomVins.add(new JLabel("Couleur : "));
 		bottomVins.add(couleurVinsM);
 		
-		// On ajoute le champs Cépage au panel bottomVins
-		bottomVins.add(new JLabel("Cépage : "));
+		// On ajoute le champs Cepage au panel bottomVins
+		bottomVins.add(new JLabel("Cepage : "));
 		bottomVins.add(cepageVinsM);
 		
-		// On ajoute le champs Année au panel bottomVins
-		bottomVins.add(new JLabel("Année : "));
+		// On ajoute le champs Annee au panel bottomVins
+		bottomVins.add(new JLabel("Annee : "));
 		bottomVins.add(dateVinsM);
 		
 		// On cache le panel bottomVins
 		bottomVins.setVisible(false);
 	
-		// On créé le bouton modifierVins
-		JButton modifierVins = new JButton("Modifier le vin sélectionné.");
+		// On cree le bouton modifierVins
+		JButton modifierVins = new JButton("Modifier le vin selectionne.");
 		
-		// On lui attribue un écouteur
+		// On lui attribue un ecouteur
 		modifierVins.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ae) {
-				// On prépare la requête de selection
+				// On prepare la requete de selection
 				String requete = "SELECT * FROM vins WHERE identifiantVin=";
-				// On créé un tableau de String pour récupérer le champ pour la modification de l'étagère
+				// On cree un tableau de String pour recuperer le champ pour la modification de l'etagere
 				String [] t = new String[1];
 				t[0] = vinAModifier.getSelectedItem().toString();;
 				
 				// Si l'argument est vide, nous affichons un message d'erreur.
 				if(t[0].isEmpty()){
-					JOptionPane.showMessageDialog(null, "Veuillez sélectionner un vin à modifier.\n", "Erreur", JOptionPane.ERROR_MESSAGE);
+					JOptionPane.showMessageDialog(null, "Veuillez selectionner un vin a modifier.\n", "Erreur", JOptionPane.ERROR_MESSAGE);
 				}
 				//Sinon
 				else{
-					// On fini la préparation de la requête en ajoutant le paramètre nécessaire à la requête
+					// On fini la preparation de la requete en ajoutant le parametre necessaire a la requete
 					requete += t[0];
-					// On récupère le resultat de la requête à l'aide de MyConnexionSelect(String requête)
+					// On recupere le resultat de la requete a l'aide de MyConnexionSelect(String requete)
 					ResultSet statut = bdd.MyConnexionSelect(requete);
-					// Bloc try catch pour la gestion des excetions dû à  la requête.					
+					// Bloc try catch pour la gestion des excetions du a  la requete.					
 						try {
-							// Si la requête a renvoyé des données, nous mettons ces données dans les champs de modification du vin 
+							// Si la requete a renvoye des donnees, nous mettons ces donnees dans les champs de modification du vin 
 							if(statut.first()){
 								vinCourant = t[0];
 								regionVinsM.setText(statut.getString("regionVin"));
@@ -1734,10 +1758,10 @@ public class FenetreAdmin extends JFrame{
 								dateVinsM.setText(statut.getString("dateVin"));
 								
 							}
-							// Sinon, nous affichons un message d'erreur et nous mettons le vinAModifier à vide.
+							// Sinon, nous affichons un message d'erreur et nous mettons le vinAModifier a vide.
 							else
 							{
-								JOptionPane.showMessageDialog(null, "Le vin d'identifiant " + t[0] + " n'a pas été sélectionner dans la base de données.\n", "Erreur", JOptionPane.ERROR_MESSAGE);
+								JOptionPane.showMessageDialog(null, "Le vin d'identifiant " + t[0] + " n'a pas ete selectionner dans la base de donnees.\n", "Erreur", JOptionPane.ERROR_MESSAGE);
 								vinAModifier.setSelectedItem("");
 							}
 						} catch (HeadlessException | SQLException e) {
@@ -1746,7 +1770,7 @@ public class FenetreAdmin extends JFrame{
 						// Nous affichons le bottomVins
 						bottomVins.setVisible(true);;
 				}
-				// On met à jour les listes vinAModifier et vinASupprimer
+				// On met a jour les listes vinAModifier et vinASupprimer
 				MAJpanelVins(vinAModifier);
 				MAJpanelVins(vinASupprimer);
 				
@@ -1756,15 +1780,15 @@ public class FenetreAdmin extends JFrame{
 		// On ajoute au panel nord le bouton modifierVins au sud
 		nord.add(modifierVins, BorderLayout.SOUTH);
 		
-		// On créé un bouton updateDataVins
-		JButton updateDataVins = new JButton("Valider les données.\n");
+		// On cree un bouton updateDataVins
+		JButton updateDataVins = new JButton("Valider les donnees.\n");
 		
-		// On lui attribue un écouteur
+		// On lui attribue un ecouteur
 		updateDataVins.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ae) {
-				// On prépare la requête d'update
+				// On prepare la requete d'update
 				String requete = "UPDATE cave.vins SET ";
-				// On créé un tableau de String pour récupérer le champ pour la modification de l'étagère
+				// On cree un tableau de String pour recuperer le champ pour la modification de l'etagere
 				String [] t = new String[6];
 				t[0] = regionVinsM.getText();
 				t[1] = domaineVinsM.getText();
@@ -1780,30 +1804,30 @@ public class FenetreAdmin extends JFrame{
 				// Sinon
 				else
 				{
-					// Si l'année renseignée est différente de 4 caractères on affiche un message d'erreur
+					// Si l'annee renseignee est differente de 4 caracteres on affiche un message d'erreur
 					if(t[5].length() != 4){
-						JOptionPane.showMessageDialog(null, "Veuillez renseigner une année valide.\n", "Erreur", JOptionPane.ERROR_MESSAGE);
+						JOptionPane.showMessageDialog(null, "Veuillez renseigner une annee valide.\n", "Erreur", JOptionPane.ERROR_MESSAGE);
 					}
 					else
 					{
-						// On fini la préparation de la requête en ajoutant les paramètres nécessaires à la requête
+						// On fini la preparation de la requete en ajoutant les parametres necessaires a la requete
 						requete += "regionVin='"+ t[0] + "', domaineVin='" + t[1] + "', châteauVin='" + t[2] + "', couleur='" + t[3] + "', cepageVin='" + t[4] + "', dateVin=" + t[5];
 						requete += " WHERE identifiantVin=" + vinCourant;
-						// Nous effectuons la requête à l'aide de la fonction MyConnexionInsertDeleteUpdate(String requete).
+						// Nous effectuons la requete a l'aide de la fonction MyConnexionInsertDeleteUpdate(String requete).
 						boolean statut = bdd.MyConnexionInsertDeleteUpdate(requete);
-						// Si la requête à réussi, nous affichons un message pour dire que la vin a été modifié.
+						// Si la requete a reussi, nous affichons un message pour dire que la vin a ete modifie.
 						// Et nous recachons le panel bottomVins.
 						if((statut)){
-							JOptionPane.showMessageDialog(null, "Le vin d'identifiant " + vinCourant + " a été modifié dans la base de données.\n", "Information", JOptionPane.INFORMATION_MESSAGE);
+							JOptionPane.showMessageDialog(null, "Le vin d'identifiant " + vinCourant + " a ete modifie dans la base de donnees.\n", "Information", JOptionPane.INFORMATION_MESSAGE);
 							bottomVins.setVisible(false);
 						}
 						// Sinon on affiche un message d'erreur.
 						else
 						{
-							JOptionPane.showMessageDialog(null, "Le vin d'identifiant " + vinCourant + " n'a pas été modifié dans la base de données.\n", "Erreur", JOptionPane.ERROR_MESSAGE);
+							JOptionPane.showMessageDialog(null, "Le vin d'identifiant " + vinCourant + " n'a pas ete modifie dans la base de donnees.\n", "Erreur", JOptionPane.ERROR_MESSAGE);
 						}
 					}
-					// On met à jour les listes vinAModifier et vinASupprimer
+					// On met a jour les listes vinAModifier et vinASupprimer
 					MAJpanelVins(vinAModifier);
 					MAJpanelVins(vinASupprimer);
 					MAJpanelRangement(listeetagere, listebouteille, listevin);
@@ -1815,74 +1839,74 @@ public class FenetreAdmin extends JFrame{
 		// On ajoute au panel bottomVins le bouton updateDataVins
 		bottomVins.add(updateDataVins);
 		
-		// On ajoute au panelModifVins le panel nord à la position nord et le panel bottomVins à la position sud.
+		// On ajoute au panelModifVins le panel nord a la position nord et le panel bottomVins a la position sud.
 		panelModifVins.add(nord, BorderLayout.NORTH);
 		panelModifVins.add(bottomVins, BorderLayout.SOUTH);
 		
 	}
 
-	// Création du panel de suppression de vin
+	// Creation du panel de suppression de vin
 	public void createPanelSupprimerVins(){
-		// On créé le panel panelSupprimerVins qui contiendra tous les éléments de l'onglet SupprimerVins de la FenetreAdmin
+		// On cree le panel panelSupprimerVins qui contiendra tous les elements de l'onglet SupprimerVins de la FenetreAdmin
 		panelSupprimerVins = new JPanel();
-		// On lui dit que l'affichage des champs se par région
+		// On lui dit que l'affichage des champs se par region
 		panelSupprimerVins.setLayout(new BorderLayout());
 
-		// On créé le panel nord qui le panel inner et le bouton supprimerVins
+		// On cree le panel nord qui le panel inner et le bouton supprimerVins
 		JPanel nord = new JPanel();
-		// On lui dit que l'affichage des champs se par région
+		// On lui dit que l'affichage des champs se par region
 		nord.setLayout(new BorderLayout());
 		
-		// On créé le panel inner qui contiendra les champs pour supprimer un vin
+		// On cree le panel inner qui contiendra les champs pour supprimer un vin
 		JPanel inner = new JPanel();
 		// On lui dit que l'affichage des champs se fera sous forme de grille avec 1 ligne et 2 colonnes
 		inner.setLayout(new GridLayout(1,2));
 		
-		// On créé la liste des vins à supprimer
+		// On cree la liste des vins a supprimer
 		creerListeVin(vinASupprimer);
 		
-		// On ajoute au panel inner la liste des vins à supprimer
-		inner.add(new JLabel("Vins à supprimer:"));
+		// On ajoute au panel inner la liste des vins a supprimer
+		inner.add(new JLabel("Vins a supprimer:"));
 		inner.add(vinASupprimer);
 		
 		// On ajoute au panel nord le panel inner au nord
 		nord.add(inner, BorderLayout.NORTH);
 		
-		// On créé un bouton supprimerVins
-		JButton supprimerVins = new JButton("Supprimer le vin sélectionné.");
+		// On cree un bouton supprimerVins
+		JButton supprimerVins = new JButton("Supprimer le vin selectionne.");
 		
-		// On lui attribue un écouteur
+		// On lui attribue un ecouteur
 		supprimerVins.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ae) {
-				// On prépare la requête de suppression
+				// On prepare la requete de suppression
 				String requete = "DELETE FROM vins WHERE identifiantVin=";
-				// On créé un tableau de String pour récupérer les champs pour l'ajout de la cave
+				// On cree un tableau de String pour recuperer les champs pour l'ajout de la cave
 				String [] t = new String[1];
 				t[0] = vinASupprimer.getSelectedItem().toString();;
 				
-				// Si aucune étagère n'est sélectionnée, nous affichons un message d'erreur.
+				// Si aucune etagere n'est selectionnee, nous affichons un message d'erreur.
 				if(t[0].isEmpty()){
-					JOptionPane.showMessageDialog(null, "Veuillez sélectionner un vin à supprimer.\n", "Erreur", JOptionPane.ERROR_MESSAGE);
+					JOptionPane.showMessageDialog(null, "Veuillez selectionner un vin a supprimer.\n", "Erreur", JOptionPane.ERROR_MESSAGE);
 				}
 				// Sinon
 				else{
-					// On fini la préparation de la requête en ajoutant le paramètre nécessaire à la requête
+					// On fini la preparation de la requete en ajoutant le parametre necessaire a la requete
 					requete += t[0];
-					// Nous effectuons la requête à l'aide de la fonction MyConnexionInsertDeleteUpdate(String requete).
+					// Nous effectuons la requete a l'aide de la fonction MyConnexionInsertDeleteUpdate(String requete).
 					boolean statut = bdd.MyConnexionInsertDeleteUpdate(requete);
-					// Si la requête à échouer, nous affichons un message d'erreur et nous remettons le champ de suppression de vin à vide.
+					// Si la requete a echouer, nous affichons un message d'erreur et nous remettons le champ de suppression de vin a vide.
 					if(!(statut)){
-						JOptionPane.showMessageDialog(null, "Le vin d'identifiant " + t[0] + "n'a pas été supprimée de votre base de données.\n", "Erreur", JOptionPane.ERROR_MESSAGE);
+						JOptionPane.showMessageDialog(null, "Le vin d'identifiant " + t[0] + "n'a pas ete supprimee de votre base de donnees.\n", "Erreur", JOptionPane.ERROR_MESSAGE);
 						vinASupprimer.setSelectedItem("");
 					}
-					// Sinon, on met un message de succès et on remet le champ de suppression de vin à vide
+					// Sinon, on met un message de succes et on remet le champ de suppression de vin a vide
 					else
 					{
-						JOptionPane.showMessageDialog(null, "Le vin d'identifiant " + t[0] + " a été supprimée de votre base de données.\n", "Information", JOptionPane.INFORMATION_MESSAGE);
+						JOptionPane.showMessageDialog(null, "Le vin d'identifiant " + t[0] + " a ete supprimee de votre base de donnees.\n", "Information", JOptionPane.INFORMATION_MESSAGE);
 						vinASupprimer.setSelectedItem("");
 					}	
 				}
-				// Mise à jour des listes vinAModifier et vinASupprimer
+				// Mise a jour des listes vinAModifier et vinASupprimer
 				MAJpanelVins(vinAModifier);
 				MAJpanelVins(vinASupprimer);
 				MAJpanelRangement(listeetagere, listebouteille, listevin);
@@ -1896,31 +1920,31 @@ public class FenetreAdmin extends JFrame{
 		panelSupprimerVins.add(nord, BorderLayout.CENTER);
 	}
 
-	// Création du panel de Rangement de vin/bouteille sur étagère
+	// Creation du panel de Rangement de vin/bouteille sur etagere
 	public void createPanelRangement(){
-		// On créé le panel panelRangement qui contiendra tous les éléments de l'onglet Rangement de la FenetreAdmin
+		// On cree le panel panelRangement qui contiendra tous les elements de l'onglet Rangement de la FenetreAdmin
 		panelRangement = new JPanel();
-		// On lui dit que l'affichage des champs se par région
+		// On lui dit que l'affichage des champs se par region
 		panelRangement.setLayout(new BorderLayout());
 
-		// On créé le panel nord qui le panel inner et le bouton ajouterRangement
+		// On cree le panel nord qui le panel inner et le bouton ajouterRangement
 		JPanel nord = new JPanel();
 		// On lui dit que l'affichage des champs se fera sous forme de grille avec 1 ligne et 2 colonnes
 		nord.setLayout(new GridLayout(2,0));
 		
-		// On créé le panel inner qui contiendra les champs pour ajouter un rangement de vin/bouteille dans la cave
+		// On cree le panel inner qui contiendra les champs pour ajouter un rangement de vin/bouteille dans la cave
 		JPanel inner = new JPanel();
 		// On lui dit que l'affichage des champs se fera sous forme de grille avec 1 ligne et 2 colonnes
 		inner.setLayout(new GridLayout(4,2));
 		
-		// On créé la liste des étagères disponibles
+		// On cree la liste des etageres disponibles
 		creerListeEtagere(listeetagere);
 		
-		// On ajoute le champ étagère au panel inner
-		inner.add(new JLabel("Veuillez selectionner une étagère"));
+		// On ajoute le champ etagere au panel inner
+		inner.add(new JLabel("Veuillez selectionner une etagere"));
 		inner.add(listeetagere);
 		
-		// On créé la liste des bouteilles disponibles
+		// On cree la liste des bouteilles disponibles
 		creerListeBouteilleRangement(listebouteille);
 		
 		// On ajoute le champ bouteille au panel inner
@@ -1928,7 +1952,7 @@ public class FenetreAdmin extends JFrame{
 		inner.add(listebouteille);
 		
 		
-		// On créé la liste des vins disponibles
+		// On cree la liste des vins disponibles
 		creerListeVin(listevin);
 		
 		// On ajoute le champ vin au panel inner
@@ -1939,91 +1963,91 @@ public class FenetreAdmin extends JFrame{
 		// On ajoute au panel nord le panel inner
 		nord.add(inner);
 		
-		// On créé un bouton ajouterRangement
+		// On cree un bouton ajouterRangement
 		JButton ajouterRangement = new JButton("Ranger le vins");
 		
-		// On lui attribue un écouteur
+		// On lui attribue un ecouteur
 		ajouterRangement.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ae) {
-				// On prépare la requête d'insertion
+				// On prepare la requete d'insertion
 				String requeteInsert = "INSERT INTO bouteille_has_vins(Bouteille_identifiantBouteille, Vins_identifiantVin, Etagère_identifiantEtagère) VALUES (";
-				// On prépare la requête de sélection de bouteilles
+				// On prepare la requete de selection de bouteilles
 				String requeteSelectBottle = "SELECT * FROM bouteille WHERE taille=";
 				String idBottle = null;
-				// On prépare la requête de sélection d'étagères
+				// On prepare la requete de selection d'etageres
 				String requeteSelectEtagere = "SELECT * FROM etagère WHERE positionEtagère='";
 				String idEtagere = null;
 				
-				// On créé un tableau de String pour récupérer les champs pour le rangement du vin/bouteille
+				// On cree un tableau de String pour recuperer les champs pour le rangement du vin/bouteille
 				String [] t = new String[3];
 				t[0] = listeetagere.getSelectedItem().toString();
 				t[1] = listebouteille.getSelectedItem().toString();
 				t[2] = listevin.getSelectedItem().toString();
 				
-				// Si c'est une recherche par année on fait la requête et on affiche le panel bottom des résultats.
+				// Si c'est une recherche par annee on fait la requete et on affiche le panel bottom des resultats.
 				if(t[0].isEmpty() || t[1].isEmpty() || t[2].isEmpty()){
-					JOptionPane.showMessageDialog(null, "Veuillez renseigner tous les champs demandés.\n", "Erreur", JOptionPane.ERROR_MESSAGE);
+					JOptionPane.showMessageDialog(null, "Veuillez renseigner tous les champs demandes.\n", "Erreur", JOptionPane.ERROR_MESSAGE);
 					listeetagere.setSelectedItem("");
 					listebouteille.setSelectedItem("");
 					listevin.setSelectedItem("");
 				}
 				else{
-					// On fini de préparer les requêtes de sélection avec les champs récupérés.
+					// On fini de preparer les requetes de selection avec les champs recuperes.
 					requeteSelectBottle += t[1] + "";
 					requeteSelectEtagere += t[0] + "\'";
 					// On effectue les deux select
 					ResultSet statutBottle = bdd.MyConnexionSelect(requeteSelectBottle);
 					ResultSet statutEtagere = bdd.MyConnexionSelect(requeteSelectEtagere);
 						try {
-							// Si la sélection des bouteilles à donner un résultat on récupère l'identifiant du premier résultat
+							// Si la selection des bouteilles a donner un resultat on recupere l'identifiant du premier resultat
 							if(statutBottle.first()){
 								idBottle = statutBottle.getString("identifiantBouteille");
 							}
-							// Sinon, on affiche une erreur et on dit que l'on a pas sélectionné de bouteille. On met le champ à vide.
+							// Sinon, on affiche une erreur et on dit que l'on a pas selectionne de bouteille. On met le champ a vide.
 							else
 							{
-								JOptionPane.showMessageDialog(null, "Une bouteille de " + t[1] + " litre n'a pas été selectionné dans la base de données", "Erreur", JOptionPane.ERROR_MESSAGE);
+								JOptionPane.showMessageDialog(null, "Une bouteille de " + t[1] + " litre n'a pas ete selectionne dans la base de donnees", "Erreur", JOptionPane.ERROR_MESSAGE);
 								listebouteille.setSelectedItem("");
 							}
-							// Si la sélection des étagères à donner un résultat, on récupère l'identifiant du premier résultat.
+							// Si la selection des etageres a donner un resultat, on recupere l'identifiant du premier resultat.
 							if(statutEtagere.first()){
 								idEtagere = statutEtagere.getString("identifiantEtagère");
 							}
-							// Sinon, message d'erreur et on met le champ à vide
+							// Sinon, message d'erreur et on met le champ a vide
 							else
 							{
-								JOptionPane.showMessageDialog(null, "L'étagère à la position " + t[0] + " n'a pas été selectionné dans la base de données", "Erreur", JOptionPane.ERROR_MESSAGE);
+								JOptionPane.showMessageDialog(null, "L'etagere a la position " + t[0] + " n'a pas ete selectionne dans la base de donnees", "Erreur", JOptionPane.ERROR_MESSAGE);
 								listeetagere.setSelectedItem("");
 							}
 							
 						} catch (HeadlessException | SQLException e) {
 							e.printStackTrace();
 						}
-						// Si on a récupéré une bouteille et une étagère
+						// Si on a recupere une bouteille et une etagere
 						if(idBottle != null && idEtagere != null)
 						{
-							// On fini de préparer la requête d'insert avec tous les champs nécessaires à la requête.
+							// On fini de preparer la requete d'insert avec tous les champs necessaires a la requete.
 							requeteInsert += idBottle + "," + t[2] + "," + idEtagere + ")";
 							// On effectue le insert
 							boolean status = bdd.MyConnexionInsertDeleteUpdate(requeteInsert);
-							// Si la requête n'a pas fonctionné, on aura une erreur. On met tous les champs à vide
+							// Si la requete n'a pas fonctionne, on aura une erreur. On met tous les champs a vide
 							if(!(status)){
 								JOptionPane.showMessageDialog(null, "Il y a eu une erreur", "Erreur", JOptionPane.ERROR_MESSAGE);
 								listeetagere.setSelectedItem("");
 								listebouteille.setSelectedItem("");
 								listevin.setSelectedItem("");
 							}
-							// Sinon, on a un message de succès et on met tous les champs à vide.
+							// Sinon, on a un message de succes et on met tous les champs a vide.
 							else
 							{
-								JOptionPane.showMessageDialog(null, "Le vin à été rangé", "Information", JOptionPane.INFORMATION_MESSAGE);
+								JOptionPane.showMessageDialog(null, "Le vin a ete range", "Information", JOptionPane.INFORMATION_MESSAGE);
 								listeetagere.setSelectedItem("");
 								listebouteille.setSelectedItem("");
 								listevin.setSelectedItem("");
 							}
 						}
 				}
-				// On met à jour les listes contenu dans ce panel : listeetagere, listebouteille et listevin
+				// On met a jour les listes contenu dans ce panel : listeetagere, listebouteille et listevin
 				MAJpanelRangement(listeetagere, listebouteille, listevin);
 			}
 		});
@@ -2035,18 +2059,18 @@ public class FenetreAdmin extends JFrame{
 		panelRangement.add(nord,BorderLayout.CENTER);
 	}
 	
-	// Fonction qui nous permet d'actualiser l'affichage du résultat de la requête dans onglet Recherche
+	// Fonction qui nous permet d'actualiser l'affichage du resultat de la requete dans onglet Recherche
 	public void rafraichirDataRecherche(JPanel p, JTable o){
-		// On enlève tous les éléments du panel bottom
+		// On enleve tous les elements du panel bottom
 		p.removeAll();
 		if(o == null){
 			p.setVisible(false);
 		}
 		else
 		{
-			// On lui ajoute au nord les entêtes du tableau
+			// On lui ajoute au nord les entetes du tableau
 			p.add(o.getTableHeader(), BorderLayout.NORTH);
-			// On lui ajoute au centre les données du résultat de la requête
+			// On lui ajoute au centre les donnees du resultat de la requete
 			p.add(o, BorderLayout.CENTER);
 				
 		}
@@ -2058,7 +2082,7 @@ public class FenetreAdmin extends JFrame{
 		creerListeCave(p);
 	}
 	
-	// Fonction qui permet de récupérer la liste des cave à vin de l'utilisateur dans la base et de les organiser dans une JComboBox<String>
+	// Fonction qui permet de recuperer la liste des cave a vin de l'utilisateur dans la base et de les organiser dans une JComboBox<String>
 	public void creerListeCave(JComboBox<String> c){
 		c.setPreferredSize(new Dimension(200,30));
 		c.addItem("");
@@ -2079,7 +2103,7 @@ public class FenetreAdmin extends JFrame{
 		creerListeVin(p);
 	}
 	
-	// Fonction qui permet de récupérer la liste des vins dans la base et de les organiser dans une JComboBox<String>
+	// Fonction qui permet de recuperer la liste des vins dans la base et de les organiser dans une JComboBox<String>
 	public void creerListeVin(JComboBox<String> c){
 		c.setPreferredSize(new Dimension(200,30));
 		c.addItem("");
@@ -2100,7 +2124,7 @@ public class FenetreAdmin extends JFrame{
 		creerListeBouteille(p);
 	}
 	
-	// Fonction qui permet de récupérer la liste des bouteilles dans la base et de les organiser dans une JComboBox<String>
+	// Fonction qui permet de recuperer la liste des bouteilles dans la base et de les organiser dans une JComboBox<String>
 	public void creerListeBouteille(JComboBox<String> c){
 		c.setPreferredSize(new Dimension(200,30));
 		c.addItem("");
@@ -2116,13 +2140,13 @@ public class FenetreAdmin extends JFrame{
 		}
 	}
 	
-	// Fonction qui permet de rafraichir les listes d"étagères
+	// Fonction qui permet de rafraichir les listes d"etageres
 	public void MAJpanelEtageres(JComboBox<String> p){
 		p.removeAllItems();
 		creerListeEtagere(p);
 	}
 	
-	// Fonction qui permet de récupérer la liste des étagères de la cave courante et de l'utilisateur dans la base et de les organiser dans une JComboBox<String>
+	// Fonction qui permet de recuperer la liste des etageres de la cave courante et de l'utilisateur dans la base et de les organiser dans une JComboBox<String>
 	public void creerListeEtagere(JComboBox<String> c){
 		c.setPreferredSize(new Dimension(200,30));
 		c.addItem("");
@@ -2149,11 +2173,11 @@ public class FenetreAdmin extends JFrame{
 		
 	}
 	
-	// Fonction qui permet de récupérer la liste des bouteilles qui ne sont pas déjà pleine de vin dans la base et de les organiser dans une JComboBox<String> (pour onglet Rangement)
+	// Fonction qui permet de recuperer la liste des bouteilles qui ne sont pas deja pleine de vin dans la base et de les organiser dans une JComboBox<String> (pour onglet Rangement)
 	public void creerListeBouteilleRangement(JComboBox<String> c){
 		c.setPreferredSize(new Dimension(200,30));
 		c.addItem("");
-		// Requete pour ne selectionner que les bouteilles non utilisées.  
+		// Requete pour ne selectionner que les bouteilles non utilisees.  
 		String req = "SELECT * FROM bouteille"; //LEFT JOIN bouteille_has_vins ON bouteille.identifiantBouteille = bouteille_has_vins.Bouteille_identifiantBouteille WHERE bouteille_has_vins.Bouteille_identifiantBouteille IS NULL";
 		ResultSet statement = bdd.MyConnexionSelect(req);
 		try {

@@ -3,17 +3,17 @@
 import java.awt.Dimension;
 import java.awt.GridLayout;
 
-// Import pour les écouteurs des boutons
+// Import pour les ecouteurs des boutons
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-// Import pour les requête faites à  la base de données et pour la gestion des Exceptions
+// Import pour les requete faites a  la base de donnees et pour la gestion des Exceptions
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.awt.HeadlessException;
 
-// Import pour les éléments du JFrame
+// Import pour les elements du JFrame
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -26,17 +26,17 @@ public class FenetreConnexion extends JFrame{
 
 	private static final long serialVersionUID = -8259698762583706502L;
 	
-	// Champs nécessaire pour la connexion d'un marchand de vin
+	// Champs necessaire pour la connexion d'un marchand de vin
 	private JTextField login;
 	private JTextField password;
 	
 	private InteractionBDD bdd = new InteractionBDD();
 	
-    // Constructeur par défaut de la fenêtre de Connexion
+    // Constructeur par defaut de la fenetre de Connexion
 	public FenetreConnexion() {
-		// On appel le constructeur de JFrame avec un paramètre qui est le nom de la fenêtre
+		// On appel le constructeur de JFrame avec un parametre qui est le nom de la fenetre
 		super("Fenetre de connexion");
-		// Ensuite on initialise cette fenêtre
+		// Ensuite on initialise cette fenetre
 		init();
 	}
 	
@@ -47,12 +47,12 @@ public class FenetreConnexion extends JFrame{
 		login = new JTextField();
 		password = new JPasswordField();
 
-		// On créé le panel principal celui qui contiendra tous ce qui constitue notre fenetre
+		// On cree le panel principal celui qui contiendra tous ce qui constitue notre fenetre
 		JPanel panel = new JPanel();
 		
 		// On lui dit que l'affichage des champs se fera sous forme de grille avec 3 ligne et 2 colonnes
 		panel.setLayout(new GridLayout(3, 2));
-		// On met la dimension du panel à  300px de large et 80px de hauteur
+		// On met la dimension du panel a  300px de large et 80px de hauteur
 		panel.setPreferredSize(new Dimension(300, 80));
 
 		// On ajoute le champs Login :
@@ -67,55 +67,55 @@ public class FenetreConnexion extends JFrame{
 		// On cree un bouton Valider
 		JButton validateButton = new JButton("Valider");
 		
-		// On lui attribue un écouteur
+		// On lui attribue un ecouteur
 		validateButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ae) {
 				
-				// On récupère les champs entrés par l'utilisateur à  l'aide de la fonction login(String log, char[] pass)
+				// On recupere les champs entres par l'utilisateur a  l'aide de la fonction login(String log, char[] pass)
 				String [] t = login(login.getText(), ((JPasswordField) password).getPassword());
-				// On instancie l'identifiant de l'utilisateur à  0
+				// On instancie l'identifiant de l'utilisateur a  0
 				String idUser = "0";
 				
-				// On crée un ResultSet qui contiendra les résultats de la requête
+				// On cree un ResultSet qui contiendra les resultats de la requete
 				ResultSet resultRequete;
 				
-				// Si au moins un des deux champs n'est pas renseigné, on affiche une erreur
+				// Si au moins un des deux champs n'est pas renseigne, on affiche une erreur
 				if (t[0].isEmpty() || t[1].isEmpty()){
-					JOptionPane.showMessageDialog(null, "Veuillez renseigner les champs demandés pour la connexion.\n", "Information", JOptionPane.INFORMATION_MESSAGE);
+					JOptionPane.showMessageDialog(null, "Veuillez renseigner les champs demandes pour la connexion.\n", "Information", JOptionPane.INFORMATION_MESSAGE);
 					
 				}
 				else
 				// Sinon tous les champs sont non vide.
 				{	
-					// On récupère les résultats de la requête à  l'aide de la fonction MyConnexion(String nom, String mdp).
+					// On recupere les resultats de la requete a  l'aide de la fonction MyConnexion(String nom, String mdp).
 					String requete = "SELECT * FROM utilisateur WHERE nomUtilisateur='" + t[0] + "' AND motDePasse=MD5('" + t[1] + "')";
 			    	
 					resultRequete = bdd.MyConnexionSelect(requete);
-					// Bloc try catch pour la gestion des excetions dû à  la requête.
+					// Bloc try catch pour la gestion des excetions du a  la requete.
 					try {
 						while(resultRequete.next()){
 							idUser = resultRequete.getString("identifiantUtilisateur");
 						}
-						// Si l'idUser est différent de 0 c'est que nous avons eu un marchand de vin qui demande à  se connecter
+						// Si l'idUser est different de 0 c'est que nous avons eu un marchand de vin qui demande a  se connecter
 						if(idUser != "0") {
 							// On affiche un message de redirection
-							JOptionPane.showMessageDialog(null, "Vous allez être redirigé vers la page des admins.\n","Information", JOptionPane.INFORMATION_MESSAGE);
+							JOptionPane.showMessageDialog(null, "Vous allez etre redirige vers la page des admins.\n","Information", JOptionPane.INFORMATION_MESSAGE);
 							
-							// On créé une instance de FenetreAdmin qui est la fenêtre des marchands de vins.
+							// On cree une instance de FenetreAdmin qui est la fenetre des marchands de vins.
 							FenetreAdmin fa = new FenetreAdmin(idUser);
 							fa.pack();
-							// On place la fenêtre au centre de l'écran
+							// On place la fenetre au centre de l'ecran
 							fa.setLocationRelativeTo(null);
 							// On la rend visible
 							fa.setVisible(true);
-							// On cache la fenêtre de connexion
+							// On cache la fenetre de connexion
 							setVisible(false);
 						}
-						// Sinon, le mot de passe est erroné ou l'utilisateur n'existe pas.
+						// Sinon, le mot de passe est errone ou l'utilisateur n'existe pas.
 						else
 						{
-							JOptionPane.showMessageDialog(null, "Votre mot de passe est erroné ou vous n'êtes pas marchand.\n", "Erreur", JOptionPane.ERROR_MESSAGE);
-							// On remet les champs à  vide.
+							JOptionPane.showMessageDialog(null, "Votre mot de passe est errone ou vous n'etes pas marchand.\n", "Erreur", JOptionPane.ERROR_MESSAGE);
+							// On remet les champs a  vide.
 							login.setText("");
 							password.setText("");
 						}
@@ -130,16 +130,16 @@ public class FenetreConnexion extends JFrame{
 		panel.add(validateButton);
 		
 		
-		// On créé un bouton Annuler
+		// On cree un bouton Annuler
 		JButton cancelButton = new JButton("Annuler");
 		
-		// On lui attribut un écouteur
+		// On lui attribut un ecouteur
 		cancelButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ae) {
-				// On remet les champs à vide
+				// On remet les champs a vide
 				login.setText("");
 				password.setText("");
-				// On cache la fenêtre pour afficher la FenetreClient qui est la fenêtre principale de notre application.
+				// On cache la fenetre pour afficher la FenetreClient qui est la fenetre principale de notre application.
 				setVisible(false);
 			}
 		});
@@ -151,12 +151,12 @@ public class FenetreConnexion extends JFrame{
 		getContentPane().add(panel);
 	}
 	
-	// Fonction qui nous permet de recupérer dans un tableau de String le contenu des champs login et password
+	// Fonction qui nous permet de recuperer dans un tableau de String le contenu des champs login et password
 	private String[] login(String username, char[] passwordChars){
-		// On créé notre tableau de String
+		// On cree notre tableau de String
 		String[] s = new String[2];
 		String password = "";
-		// On récupère le password
+		// On recupere le password
 		for(char c: passwordChars){
 			password+=c;
 		}
