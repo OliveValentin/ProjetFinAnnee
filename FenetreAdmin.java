@@ -131,6 +131,7 @@ public class FenetreAdmin extends JFrame{
 	private		JPanel		panelRangementAjout;
 	private		JPanel		panelRangementModif;
 	private		JPanel		panelRangementSupprimer;
+	private String[][] dataRangement;
 		
 	// Champs necessaire pour le rangement des vins/bouteilles sur les etageres (Onglet Rangement Ajout)
 	private JComboBox<String> listeetagere = new JComboBox<String>();
@@ -1806,7 +1807,6 @@ public class FenetreAdmin extends JFrame{
 				// On met a jour les listes vinAModifier et vinASupprimer
 				MAJpanelVins(vinAModifier);
 				MAJpanelVins(vinASupprimer);
-				MAJpanelAjoutRangement(listeetagere, listebouteille, listevin);
 			}
 		});
 		
@@ -1883,7 +1883,6 @@ public class FenetreAdmin extends JFrame{
 				// Mise a jour des listes vinAModifier et vinASupprimer
 				MAJpanelVins(vinAModifier);
 				MAJpanelVins(vinASupprimer);
-				MAJpanelAjoutRangement(listeetagere, listebouteille, listevin);
 			}
 		});
 		
@@ -2066,6 +2065,8 @@ public class FenetreAdmin extends JFrame{
 				}
 				// On met a jour les listes contenu dans ce panel : listeetagere, listebouteille et listevin
 				MAJpanelAjoutRangement(listeetagere, listebouteille, listevin);
+				MAJpanelModifRangement(rangementAModifier);
+				MAJpanelSupprimerRangement(rangementASupprimer);
 			}
 		});
 		
@@ -2136,19 +2137,17 @@ public class FenetreAdmin extends JFrame{
 				String [] t = new String[1];
 				t[0] = rangementAModifier.getSelectedItem().toString();;
 				
-				String idBout = "";
-				String idVin = "";
-				String idEtagere = "";
-				
 				// Si aucune etagere n'est selectionnee, nous affichons un message d'erreur.
 				if(t[0].isEmpty()){
 					JOptionPane.showMessageDialog(null, "Veuillez selectionner un rangement à modifier.\n", "Erreur", JOptionPane.ERROR_MESSAGE);
 				}
 				// Sinon
 				else{
-					idBout = t[0].substring(0, 1);
-					idVin = t[0].substring(1, 2);
-					idEtagere = t[0].substring(2, 3);
+					int indiceData = rangementAModifier.getSelectedIndex() - 1;
+					
+					String idBout = dataRangement[indiceData][0];
+					String idVin = dataRangement[indiceData][1];
+					String idEtagere = dataRangement[indiceData][2];
 				
 					if(!(idBout.isEmpty()) && !(idVin.isEmpty()) && !(idEtagere.isEmpty()))
 						// On fini la preparation de la requete en ajoutant le parametre necessaire a la requete
@@ -2227,6 +2226,8 @@ public class FenetreAdmin extends JFrame{
 					MAJpanelBouteilles(bouteilleAModifier);
 					MAJpanelBouteilles(bouteilleASupprimer);
 					MAJpanelAjoutRangement(listeetagere, listebouteille, listevin);
+					MAJpanelModifRangement(rangementAModifier);
+					MAJpanelSupprimerRangement(rangementASupprimer);
 				}
 				
 			}
@@ -2278,38 +2279,36 @@ public class FenetreAdmin extends JFrame{
 				String [] t = new String[1];
 				t[0] = rangementASupprimer.getSelectedItem().toString();;
 				
-				String idBout = "";
-				String idVin = "";
-				String idEtagere = "";
-				
 				// Si aucune etagere n'est selectionnee, nous affichons un message d'erreur.
 				if(t[0].isEmpty()){
 					JOptionPane.showMessageDialog(null, "Veuillez selectionner un rangement a supprimer.\n", "Erreur", JOptionPane.ERROR_MESSAGE);
 				}
 				// Sinon
 				else{
-					idBout = t[0].substring(0, 1);
-					idVin = t[0].substring(1, 2);
-					idEtagere = t[0].substring(2, 3);
-				}
-				if(!(idBout.isEmpty()) && !(idVin.isEmpty()) && !(idEtagere.isEmpty()))
-					// On fini la preparation de la requete en ajoutant le parametre necessaire a la requete
+					int indiceData = rangementASupprimer.getSelectedIndex() - 1;
+					
+					String idBout = dataRangement[indiceData][0];
+					String idVin = dataRangement[indiceData][1];
+					String idEtagere = dataRangement[indiceData][2];
+					
+					// On fini la preparation de la requete en ajoutant les parametres necessaires a la requete
 					requete += idBout + " AND Vins_identifiantVin=" + idVin + " AND Etagère_identifiantEtagère=" + idEtagere;
 					// Nous effectuons la requete a l'aide de la fonction MyConnexionInsertDeleteUpdate(String requete).
 					boolean statut = bdd.MyConnexionInsertDeleteUpdate(requete);
 					// Si la requete a echouer, nous affichons un message d'erreur et nous remettons le champ de suppression de vin a vide.
 					if(!(statut)){
-						JOptionPane.showMessageDialog(null, "Le rangement avec la bouteille " + idBout + ", contenant le vin " + idVin + " sur l'étagère " + idEtagere + " n'a pas ete supprimee de votre base de donnees.\n", "Erreur", JOptionPane.ERROR_MESSAGE);
+						JOptionPane.showMessageDialog(null, "Le rangement " + t[0] + " n'a pas ete supprimee de votre base de donnees.\n", "Erreur", JOptionPane.ERROR_MESSAGE);
 						rangementASupprimer.setSelectedItem("");
 					}
 					// Sinon, on met un message de succes et on remet le champ de suppression de vin a vide
 					else
 					{
-						JOptionPane.showMessageDialog(null, "Le rangement avec la bouteille " + idBout + ", contenant le vin " + idVin + " sur l'étagère " + idEtagere + " a ete supprimee de votre base de donnees.\n", "Information", JOptionPane.INFORMATION_MESSAGE);
+						JOptionPane.showMessageDialog(null, "Le rangement " + t[0] + " a ete supprimee de votre base de donnees.\n", "Information", JOptionPane.INFORMATION_MESSAGE);
 						rangementASupprimer.setSelectedItem("");
-					}	
+					}
+				}
 				MAJpanelAjoutRangement(listeetagere, listebouteille, listevin);
-				MAJpanelModifRangement(rangementASupprimer);
+				MAJpanelModifRangement(rangementAModifier);
 				MAJpanelSupprimerRangement(rangementASupprimer);
 			}
 		});
@@ -2445,16 +2444,23 @@ public class FenetreAdmin extends JFrame{
 	}
 	
 	private void creerListeRangement(JComboBox<String> lr) {
+		dataRangement = new String[50][3];
+		int i=0;
 		lr.setPreferredSize(new Dimension(200,30));
 		lr.addItem("");
-		String req = "SELECT * FROM bouteille_has_vins";
+		String req = "SELECT * FROM bouteille_has_vins, bouteille, vins, etagère WHERE bouteille_has_vins.Bouteille_identifiantBouteille=bouteille.identifiantBouteille AND bouteille_has_vins.Vins_identifiantVin=vins.identifiantVin AND bouteille_has_vins.Etagère_identifiantEtagère=etagère.identifiantEtagère";
 		ResultSet statement = bdd.MyConnexionSelect(req);
 		try {
 			while(statement.next()){
-				String nomRangement = statement.getString("Bouteille_identifiantBouteille");
-				nomRangement += statement.getString("Vins_identifiantVin");
-				nomRangement += statement.getString("Etagère_identifiantEtagère");
+				String nomRangement = "La bouteille de vins de " + statement.getString("taille") + " L";
+				nomRangement += " contenant le vin " + statement.getString("cepageVin");
+				nomRangement += " se trouve sur l'étagère " + statement.getString("positionEtagère");
 				lr.addItem(nomRangement);
+				dataRangement[i][0] = statement.getString("Bouteille_identifiantBouteille");
+				dataRangement[i][1] = statement.getString("Vins_identifiantVin");
+				dataRangement[i][2] = statement.getString("Etagère_identifiantEtagère");
+				i++;
+										
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
